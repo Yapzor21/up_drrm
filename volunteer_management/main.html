@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #009BFF;
+            font-weight: 600;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-new {
+            background: #00c853;
+        }
+
+        .btn-alert {
+            background: #f44336;
+        }
+
+        .personnel-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .personnel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .personnel-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .personnel-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-available {
+            background: #00c853;
+        }
+
+        .status-standby {
+            background: #ffd600;
+        }
+
+        .status-deployed {
+            background: #2196f3;
+        }
+
+        .personnel-name {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .call-button {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                margin: 0 -20px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            .personnel-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-radius: 20px 20px 0 0;
+                max-height: 60vh;
+                overflow-y: auto;
+                z-index: 100;
+                transform: translateY(calc(100% - 50px));
+                transition: transform 0.3s ease;
+            }
+
+            .personnel-panel.expanded {
+                transform: translateY(0);
+            }
+
+            .personnel-header {
+                cursor: pointer;
+            }
+
+            .personnel-header::after {
+                content: '▼';
+                font-size: 12px;
+                color: #666;
+            }
+
+            .personnel-panel.expanded .personnel-header::after {
+                content: '▲';
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="main-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Disaster Type</th>
+                            <th>Time Started</th>
+                            <th>Assigned Team</th>
+                            <th>Affected Areas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical Emergency</td>
+                            <td>9:35:20 am</td>
+                            <td>Medical Team</td>
+                            <td>Barangay 64, Basulod City</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Emergency</td>
+                            <td>9:35:20 am</td>
+                            <td>Medical Team</td>
+                            <td>Barangay 64, Basulod City</td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                </table>
+            </div>
+
+         
+        <div class="personnel-panel">
+            <div class="personnel-header">
+                <h3>Personnel</h3>
+                <span class="personnel-count">15 Available</span>
+            </div>
+            <div class="personnel-list">
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Mark Cantos</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Adrian Occillo</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Khirk Punzalan</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Mark Cantos</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Adrian Occillo</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="personnel-item">
+                    <span class="status-indicator status-available"></span>
+                    <span class="personnel-name">Khirk Punzalan</span>
+                    <button class="call-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                </div>
+               
+                
+               
+                <!-- Add more personnel items -->
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="btn btn-new">New</button>
+        <button class="btn btn-alert">Create Alert</button>
+    </div>
+</div>
+
+
+    <script>
+        // Mobile personnel panel expansion
+        const personnelPanel = document.querySelector('.personnel-panel');
+        const personnelHeader = document.querySelector('.personnel-header');
+
+        if (window.innerWidth <= 768) {
+            personnelHeader.addEventListener('click', () => {
+                personnelPanel.classList.toggle('expanded');
+            });
+        }
+
+        // Call button functionality
+        document.querySelectorAll('.call-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const name = e.target.closest('.personnel-item').querySelector('.personnel-name').textContent;
+                alert(`Calling ${name}...`);
+            });
+        });
+    </script>
+</body>
+</html>
