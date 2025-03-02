@@ -1,10 +1,16 @@
+
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>step 2</title>
-    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/authentication/step2.css'; ?>">
+    <link rel="stylesheet" href="../../assets/css/authentication/step2.css">
 </head>
 <body>
     <div class="wrapper">
@@ -14,8 +20,8 @@
             </div>
             <h1>WELCOME!</h1>
             <p class="subtitle">Please Fill Out The Information</p>
-    
-            <form id="registrationForm">
+            <input type="hidden" name="step" value="2">
+            <form id="registrationForm" method="post" action="step3.php">
                 <h2 class="section-title">Personal Information</h2>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
@@ -24,31 +30,30 @@
                             <img src="../../assets\images\Flag_of_the_Philippines.svg (1).png" alt="">
                             <span>+63</span>
                         </div>
-                        <input type="tel" id="phone" pattern="[0-10]*" required>
+                        <input type="tel" id="phone" pattern="^9[0-9]{9}$" name="phone_number" required>
+
                     </div>
                 </div>
     
                 <div class="form-group">
                     <label for="city">City</label>
-                    <input type="text" id="city" value="Bacolod City" required>
+                    <input type="text" id="city" value="Bacolod City" name="city" required>
                 </div>
     
                 <div class="form-group">
                     <label for="barangay">Barangay</label>
-                    <select id="barangay" required>
+                    <select id="barangay" name="barangay" required>
                         <option value="" disabled selected>Select Barangay</option>
                         <!-- Barangays will be populated via JavaScript -->
                     </select>
                 </div>
                 <div class="submit">
 
-    <a href="step3.php">
-        <button type="button" class="submit-btn">
+        <button type="submit" class="submit-btn">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
                 <path style="fill:#ffffff" d="m17.5 5.999-.707.707 5.293 5.293H1v1h21.086l-5.294 5.295.707.707L24 12.499l-6.5-6.5z" data-name="Right"/>
             </svg>
         </button>
-    </a>
 </div>
 
         </form>

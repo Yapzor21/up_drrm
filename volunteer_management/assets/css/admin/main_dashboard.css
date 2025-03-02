@@ -529,6 +529,8 @@ footer shess
     margin: 4px auto;
     background-color: #ffffff;
     overflow-x: auto; /* Allows horizontal scrolling if needed */;
+    min-height: calc(100vh - 550px); /* Adjust 100px based on your header and other fixed elements height */
+    padding-bottom: 60px; /* Adjust this based on your footer height */
 }
 
 #sub-content {
