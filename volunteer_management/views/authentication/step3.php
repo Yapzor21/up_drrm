@@ -1,10 +1,20 @@
+<?php
+require_once "../../controllers/user_control.php";
+$userController = new userController();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $userController->process3();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>step 3</title>
-    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/authentication/step3.css'; ?>">
+    <link rel="stylesheet" href="../../assets/css/authentication/step3.css">
 </head>
 <body>
     <div class="wrapper">
@@ -12,8 +22,35 @@
             <img src="../../assets\images\Frame 1 (1).svg" alt="">
             <h1>WELCOME!</h1>
             <p class="subtitle">Please Fill Out The Information</p>
-    
-            <form id="signupForm">
+            
+            <form id="signupForm" method="post">
+            <input type="hidden" name="step" value="3">
+
+            <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="phone-input">
+                        <div class="country-code">
+                            <img src="../../assets\images\Flag_of_the_Philippines.svg (1).png" alt="">
+                            <span>+63</span>
+                        </div>
+                        <input type="tel" id="phone" pattern="^9[0-9]{9}$" name="phone_number" required>
+
+                    </div>
+                </div>
+
+            <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" value="Bacolod City" name="city" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="barangay">Barangay</label>
+                    <select id="barangay" name="barangay" required>
+                        <option value="" disabled selected>Select Barangay</option>
+                        <!-- Barangays will be populated via JavaScript -->
+                    </select>
+                </div>
+
                 <div class="form-section">
                     <h2>Personal Information</h2>
                     <div class="radio-group">
@@ -27,14 +64,14 @@
                         </label>
                     </div>
     
-                    <select name="role" required>
+                    <select name="community_role" required>
                         <option value="" disabled selected>Community Role</option>
                         <option value="resident">Tambay</option>
                         <option value="volunteer">Rescue</option>
                         <option value="coordinator">Medical</option>
                     </select>
     
-                    <input type="text" name="skills" placeholder="Skills/Interest" required>
+                    <input type="text" name="skills_interest" placeholder="Skills/Interest" required>
                 </div>
     
                 <div class="checkbox-group">
@@ -48,13 +85,12 @@
                 </div>
     
              <div class="submit">
-        <a href="login_user.php">
-        <button type="button" class="submit-btn">
+        <button type="submit" name="submit" class="submit-btn">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
-                <path style="fill:#ffffff" d="m17.5 5.999-.707.707 5.293 5.293H1v1h21.086l-5.294 5.295.707.707L24 12.499l-6.5-6.5z" data-name="Right"/>
+                <path style="fill:#ffffff" d="m17.5 5.999-.707.707 5.293 
+                5.293H1v1h21.086l-5.294 5.295.707.707L24 12.499l-6.5-6.5z" data-name="Right"/>
             </svg>
         </button>
-        </a>
              </div>     
             </form>
         </div>
@@ -68,4 +104,5 @@
         </div>
     </div>
 </body>
+<script src="../../assets\js\create_account.js"></script>
 </html>

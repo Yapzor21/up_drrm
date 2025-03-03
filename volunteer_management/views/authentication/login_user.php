@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/authentication/login_user.css'; ?>">
+    <link rel="stylesheet" href="../../assets/css/authentication/login_user.css">
 </head>
 <body>
 
