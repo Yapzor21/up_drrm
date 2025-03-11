@@ -1,3 +1,9 @@
+<?php
+// Include database connection
+require_once '../../config/database.php';
+$sql = "SELECT * FROM user_report ORDER BY Report_Id ASC";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +45,6 @@
             <a href="community_dashboard.php" id="community_dashboard">Dashboard</a>
             <a href="#" id="admin-link">Account</a>
             <ol> <a href="community.php">About us</a></ol>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
         </nav>
     </header>
     <div id="sub-header">
@@ -60,104 +65,84 @@
     <div class="modal" id="reportModal" >
         <div class="modal-content" onclick="stopPropagation()" >
             <button class="close-button" onclick="closeModal('reportModal')">×</button>
-            <form id="reportForm">
+            <h3>Report Disaster</h3>
+            <form id="reportForm" method="POST" action="../../controllers/report_control.php" >
+                <input type="hidden" id="edit_report_id" name="report_id">
                 <div class="form-group">
                     <label for="disasterType">Disaster Type</label>
-                    <input type="text" id="disasterType" required>
+                    <input type="text" name="disasterType" id="disasterType" required>
                 </div>
 
                 <div class="form-group">
                     <label for="location">Location</label>
-                    <input type="text" id="location" required>
+                    <input type="text" name="location" id="location" required>
                 </div>
 
                 <div class="form-group">
                     <label for="Reporter">Name of Reporter</label>
-                    <input type="text" id="Reporter" required>
+                    <input type="text" name="reporter" id="Reporter" required>
                 </div>
 
                 <div class="form-group">
                     <label for="contact">Contact No.</label>
-                    <input type="tel" id="contact">
+                    <input type="tel" name="contact" id="contact">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description of Disaster</label>
-                    <textarea id="description" required></textarea>
+                    <textarea id="description" name="description" required></textarea>
                 </div>
 
-                <button type="submit" class="submit-button">Report</button>
+                <button type="submit" name="submit_report" class="submit-button" onclick="clicks()">Report</button>
             </form>
         </div>
     </div>
- 
+
     <div id="content">
         <div id="sub-content">
-            <div class="table-container"> <!-- Added div for responsive scrolling -->
+            <h1 style="margin-bottom:10px;">Reports</h1>
+            
+            <?php if(isset($message) && !empty($message)): ?>
+                <div class="message <?php echo strpos($message, 'Error') !== false ? 'error' : 'success'; ?>">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
+            
+            <div class="table-container">
                 <table id="data-list">
                     <tbody>
                         <tr>
                             <th>Report_Id</th>
                             <th>Disaster Type</th>
                             <th>Location</th>
-                            <Th>Description</Th>
+                            <th>Description</th>
                             <th>Name of Reporter</th>
                             <th>Contact Number</th>
                             <th>Date_Reported</th>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Earthquake</td>
-                            <td>Manila</td>
-                            <td>Earthquake in the area</td>
-                            <td>Adrian</td>
-                            <td>09484813580</td>
-                            <td>2021-09-01</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Earthquake</td>
-                            <td>Manila</td>
-                            <td>Earthquake in the area</td>
-                            <td>Adrian</td>
-                            <td>09484813580</td>
-                            <td>2021-09-01</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Earthquake</td>
-                            <td>Manila</td>
-                            <td>Earthquake in the area</td>
-                            <td>Adrian</td>
-                            <td>09484813580</td>
-                            <td>2021-09-01</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Earthquake</td>
-                            <td>Manila</td>
-                            <td>Earthquake in the area</td>
-                            <td>Adrian</td>
-                            <td>09484813580</td>
-                            <td>2021-09-01</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Earthquake</td>
-                            <td>Manila</td>
-                            <td>Earthquake in the area</td>
-                            <td>Adrian</td>
-                            <td>09484813580</td>
-                            <td>2021-09-01</td>
-                        </tr>
+
+                        <?php
+                        if ($result && $result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) { 
+                                echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
+                                echo "<td>" . $row["Report_Id"] . "</td>";
+                                echo "<td>" . $row["Disaster_Type"] . "</td>";
+                                echo "<td>" . $row["Location"] . "</td>";
+                                echo "<td>" . $row["Description"] . "</td>";
+                                echo "<td>" . $row["Name_of_Reporter"] . "</td>";
+                                echo "<td>" . $row["Contact_Number"] . "</td>";
+                                echo "<td>" . $row["Date_Reported"] . "</td>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='8' style='text-align:center'>No reports found</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-   
-
-
+    
   <!--footer sheeshh-->
   <footer class="footer">
     <div class="footer-content">

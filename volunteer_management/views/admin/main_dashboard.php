@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOVPH DRRM Dashboard</title>
-    <link rel="stylesheet" href="../../assets/css/admin/main_dashboard.css">
+    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets\css\admin\main_dashboard.css'; ?>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -44,7 +44,6 @@
             <a href="#" id="dashboard-link">Account</a>
             <a href="../../views\user\community_dashboard.php" id="community-link">Community</a>
             <a href="main_admin.php" id="admin-link">Admin</a>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
         </nav>
     </header>
 
@@ -72,7 +71,7 @@
     </div>
 
 <div id="content">
-    <div class="title"><h3>Reports</h3></div>
+    <div class="title"><h3 style="margin-left: 5.5px;"> ON-GOING OPERATION <h3></div>
         <div id="sub-content">
             <div class="table-container"> <!-- Added div for responsive scrolling -->
                 <table id="data-list">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOVPH DRRM Dashboard</title>
-    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/admin/main_dashboard.css'; ?>">
+    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/admin/main_admin.css'; ?>">
 </head>
 <body>
 
@@ -40,7 +40,7 @@
             <a href="main_dashboard.php" id="community_dashboard">Dashboard</a>
             <a href="#" id="admin-link">Account</a>
             <a href="main_admin.php">Admin</a>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
+
         </nav>
     </header>
     <div id="sub-header">
@@ -94,66 +94,39 @@
         </div>
     </div>
 
-    
-    <div id="content">
-        <div id="sub-content">
-            <div class="table-container"> <!-- Added div for responsive scrolling -->
-                <table id="data-list">
-                    <tbody>
-                        <tr>
-                            <th>Name</th>
-                            <th>Disaster Type</th>
-                            <Th>Role</Th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Date_Reported</th>
-                        </tr>
-                        <tr>
-                            <td>Adrian</td>
-                            <td>Earthquake</td>
-                            <td>Medical</td>
-                            <td>Manila</td>
-                            <td>En Route</td>
-                            <td>2021-09-01</td>
-                        </tr>
-
-                        <tr>
-                            <td>Adrian</td>
-                            <td>Earthquake</td>
-                            <td>Medical</td>
-                            <td>Manila</td>
-                            <td>En Route</td>
-                            <td>2021-09-01</td>
-                        </tr>
-
-                        <tr>
-                            <td>Adrian</td>
-                            <td>Earthquake</td>
-                            <td>Medical</td>
-                            <td>Manila</td>
-                            <td>En Route</td>
-                            <td>2021-09-01</td>
-                        </tr>
-
-                        <tr>
-                            <td>Adrian</td>
-                            <td>Earthquake</td>
-                            <td>Medical</td>
-                            <td>Manila</td>
-                            <td>En Route</td>
-                            <td>2021-09-01</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="main-content">
+    <div class="table-container">
+        <div class="title-header"><h3>Responses</h3></div>
+            <table>
+                <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Disaster Type</th>
+                    <Th>Role</Th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date_Reported</th>
+                    </tr>
+                </thead>
+                <tbody id="personnel-table">
+                    <tr>
+                        <td>Adrian</td>
+                        <td>Fire</td>
+                        <td>Medical Team</td>
+                        <td>Mandalagan</td>
+                        <td>on-route</td>
+                        <td>2021-09-30 10:00</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="button-container">
             <button class="btn btn-new" id="btnNew" onclick="openModal('recordModal')">New Records</button>
     </div>
     </div>
 
-   
-
+    </div>
+    
   <!--footer sheeshh-->
   <footer class="footer">
     <div class="footer-content">

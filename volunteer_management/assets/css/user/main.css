@@ -849,3 +849,9 @@ footer shess
           display: none;
           }     
          
+
+          .modal-content h3{
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }

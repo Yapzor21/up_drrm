@@ -22,4 +22,3 @@ document.addEventListener('DOMContentLoaded', function() {
     subHeader.style.transition = "top 0.10s ease-in-out";
 });
 
-

@@ -358,12 +358,14 @@ body{
 
 /*charts*/
 
+
 .chart-container {
     display: flex;
     justify-content: space-between;
     max-width: 1300px;
     margin: 20px auto;
 }
+
 .chart {
     width: 48%;
     border: #009BFF 1px solid;
@@ -383,12 +385,8 @@ body{
         border: #009BFF .5px solid;
         padding: 10px;
         height: 400px;
-    }
-    
-    
+    }  
 }
-
-
 /* 
 footer shess
 */
@@ -523,7 +521,6 @@ footer shess
         }
         }   
 
-
   #content {
     padding: 8px;
     margin: 4px auto;
@@ -541,14 +538,9 @@ footer shess
 /* Responsive Table Container */
 .table-container {
     width: 100%;
-    border-radius: 7px;
     overflow-x: auto; 
 }
-@media (max-width: 768px) {
-    .table-container {
-        margin-top: 15px; 
-    }
-}
+
 
 /* Table Styling */
 #data-list {
@@ -614,21 +606,8 @@ footer shess
     }
 }
 
-.button-container{
-display: flex;
-flex-direction: row-reverse;
-margin-top: 3rem;
+.modal-content h3{
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
 }
-         
-.btn{
-    width: 25%;
-    padding: 15px;
-    background-color: #009BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s;
-}
- 
