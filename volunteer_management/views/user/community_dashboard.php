@@ -42,7 +42,7 @@
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="community_report.php" id="community-link">Account</a>
             <a href="#" id="admin-link">About us</a>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
+           
         </nav>
     </header>
 
@@ -64,35 +64,40 @@
     <div class="modal" id="reportModal" >
         <div class="modal-content" onclick="stopPropagation()" >
             <button class="close-button" onclick="closeModal('reportModal')">×</button>
-            <form id="reportForm">
+            <h3>Report Disaster</h3>
+            <form id="reportForm" method="POST" action="../../controllers/report_control.php" >
+
+                <input type="hidden" id="edit_report_id" name="report_id">
                 <div class="form-group">
                     <label for="disasterType">Disaster Type</label>
-                    <input type="text" id="disasterType" required>
+                    <input type="text" name="disasterType" id="disasterType" required>
                 </div>
 
                 <div class="form-group">
                     <label for="location">Location</label>
-                    <input type="text" id="location" required>
+                    <input type="text" name="location" id="location" required>
                 </div>
 
                 <div class="form-group">
                     <label for="Reporter">Name of Reporter</label>
-                    <input type="text" id="Reporter" disabled>
+                    <input type="text" name="reporter" id="Reporter" required>
                 </div>
 
                 <div class="form-group">
                     <label for="contact">Contact No.</label>
-                    <input type="tel" id="contact">
+                    <input type="tel" name="contact" id="contact">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description of Disaster</label>
-                    <textarea id="description" required></textarea>
+                    <textarea id="description" name="description" required></textarea>
                 </div>
-                <button type="submit" class="submit-button">Report</button>
+
+                <button type="submit" name="submit_report" class="submit-button">Report</button>
             </form>
         </div>
     </div>
+ 
     <!--heroin-->
     <!-- Swiper Container -->
     <div class="swiper mySwiper">

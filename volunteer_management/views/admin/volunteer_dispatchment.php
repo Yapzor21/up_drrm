@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOVPH DRRM Dashboard</title>
-    <link rel="stylesheet" href="<?php echo '/volunteer_management/assets/css/admin/main_dashboard.css'; ?>">
+    <link rel="stylesheet" href="../../assets/css/admin/main_admin.css">
 </head>
 <body>
 

@@ -25,4 +25,16 @@ class Database {
     }
     
 }
+// akon ni local host na database ( isli lang ang name sang database) simo nga part para mag work simo  
+$servername = "localhost";
+$username = "root"; 
+$password = ""; 
+$dbname = "drrm"; 
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 ?>

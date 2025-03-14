@@ -44,7 +44,6 @@
             <a href="#" id="dashboard-link">Account</a>
             <a href="../../views\user\community_dashboard.php" id="community-link">Community</a>
             <a href="main_admin.php" id="admin-link">Admin</a>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
         </nav>
     </header>
 
@@ -72,7 +71,7 @@
     </div>
 
 <div id="content">
-    <div class="title"><h3>Reports</h3></div>
+    <div class="title"><h3 style="margin-left: 5.5px;"> ON-GOING OPERATION <h3></div>
         <div id="sub-content">
             <div class="table-container"> <!-- Added div for responsive scrolling -->
                 <table id="data-list">
