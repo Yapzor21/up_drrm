@@ -15,6 +15,7 @@
             <p class="subtitle"> Login to your account</p>
     
             <form id="loginForm">
+                <form id="loginForm" method = "post" action="">
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-wrapper">

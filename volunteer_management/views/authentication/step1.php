@@ -1,9 +1,12 @@
 <?php
-require_once "../../controllers/user_control.php";
-    $userController = new userController();
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userController->process1();
+session_start();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $_SESSION['first_name'] = $_POST['first_name'];
+    $_SESSION['middle_name'] = $_POST['middle_name'];
+    $_SESSION['last_name'] = $_POST['last_name'];
+    $_SESSION['dob'] = $_POST['Dob'];
+    header("location: step2.php");
+    exit();
 }
 ?>
 
@@ -25,7 +28,7 @@ require_once "../../controllers/user_control.php";
             <h1>WELCOME!</h1>
             <p class="subtitle">Please Fill Out The Information</p>
             <input type="hidden" name="step" value="1">
-            <form id="registrationForm" method="post">
+            <form id="registrationForm" method="post" action="">
                 <h2 class="section-title">Personal Information</h2>
 
                 <div class="form-group">

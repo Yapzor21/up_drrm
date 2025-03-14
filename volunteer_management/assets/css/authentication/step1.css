@@ -180,6 +180,16 @@ input:focus, select:focus {
 .login-link a:hover {
     text-decoration: underline;
 }
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
 
 @media screen and (max-width: 950px) {
     .right-section {
