@@ -1,4 +1,14 @@
 
+<?php
+require_once '../../controllers/report_control.php';
+
+// instanciate class
+$controller = new UserReportController($conn);
+
+// Get chart data
+$locationData = $controller->getLocationChartData();
+$disasterTypeData = $controller->getDisasterTypeChartData();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -170,6 +180,18 @@
     </div>
 </footer>
 </body>
+
+<script>
+
+const locationData = {
+labels: <?php echo json_encode($locationData['labels']); ?>,
+data: <?php echo json_encode($locationData['data']); ?>
+};
+
+// Disaster type data for bar chart from PHP
+const disasterTypeData = <?php echo json_encode($disasterTypeData); ?>;
+
+</script>
 <script src="../../assets/js/timelynews.js"></script>
 <script src="../../assets/js/charts.js"></script>
 </html>

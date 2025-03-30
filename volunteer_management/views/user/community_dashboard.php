@@ -1,3 +1,22 @@
+<?php
+require_once '../../controllers/report_control.php';
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user'])) {
+    // User is not logged in, redirect to the login page
+    header("Location: ../views/authentication/login_user.php");
+    exit();
+}
+
+// instanciate a class to access the methods and properties of the class
+$controller = new UserReportController($conn);
+
+// ga based sa actions sang user so ang deafult action is to view all reports
+$result = $controller->handleRequest();
+
+$message = $controller->getMessage();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +61,8 @@
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="community_report.php" id="community-link">Account</a>
             <a href="#" id="admin-link">About us</a>
-           
+            <a href="switch.php">click me</a>
+
         </nav>
     </header>
 
@@ -66,7 +86,7 @@
             <button class="close-button" onclick="closeModal('reportModal')">×</button>
             <h3>Report Disaster</h3>
             <form id="reportForm" method="POST" action="../../controllers/report_control.php" >
-
+               
                 <input type="hidden" id="edit_report_id" name="report_id">
                 <div class="form-group">
                     <label for="disasterType">Disaster Type</label>
@@ -93,7 +113,7 @@
                     <textarea id="description" name="description" required></textarea>
                 </div>
 
-                <button type="submit" name="submit_report" class="submit-button">Report</button>
+                <button type="submit" name="submit_report" class="submit-button" onclick="clicks()">Report</button>
             </form>
         </div>
     </div>
@@ -211,7 +231,6 @@
     </div>
 
   <!--footer sheeshh-->
-  <footer>
 
   <footer class="footer">
     <div class="footer-content">

@@ -1,9 +1,21 @@
 <?php
-// Include database connection
+/*
 require_once '../../config/database.php';
+
 $sql = "SELECT * FROM user_report ORDER BY Date_Reported DESC";
 $result = $conn->query($sql);
+*/
+require_once '../../controllers/report_control.php';
+
+// instanciate a class to access the methods and properties of the class
+$controller = new UserReportController($conn);
+
+// ga based sa actions sang user so ang deafult action is to view all reports
+$result = $controller->handleRequest();
+
+$message = $controller->getMessage();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,6 +72,7 @@ $result = $conn->query($sql);
             </div>
         </div>
     </div>
+    
     <!-- create alert-->
     <div class="modal" id="reportModal" >
         <div class="modal-content" onclick="stopPropagation()" >
@@ -85,6 +98,8 @@ $result = $conn->query($sql);
         </div>
     </div>
 
+
+    <!-- assigned team  -->
     <div class="modal" id="recordModal" >
         <div class="modal-content" onclick="stopPropagation()" >
             <button class="close-button"  onclick="closeModal('recordModal')">×</button>
@@ -237,16 +252,28 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody id="disaster-table">
-                    <tr>
-                        <td>Medical Emergency</td>
-                        <td>2025-03-12 9:35:20 am</td>
-                        <td>Medical Team</td>
-                        <td>Barangay 44, Bacolod City</td>
+                <?php foreach ($teams as $team): ?>
+                    <tr data-id="<?php echo htmlspecialchars($team['disaster_type']); ?>">
+                        <td><?php echo htmlspecialchars($team['disaster_type']); ?></td>
+                        <td>
+                            <?php 
+                                $datetime = $team['date_started'] . ' ' . $team['time_started'];
+                                echo htmlspecialchars($datetime); 
+                            ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($team['assigned_team']); ?></td>
+                        <td><?php echo htmlspecialchars($team['area']); ?></td>
                         <td>
                             <button class="edit-btn">Edit</button>
                             <button class="delete-btn">Delete</button>
                         </td>
                     </tr>
+                    <?php endforeach; ?>
+                <?php if (empty($teams)): ?>
+                    <tr>
+                        <td colspan="8">No records found</td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -392,6 +419,8 @@ $result = $conn->query($sql);
         </div>
     </div>
 
+    
+
     <div class="copyright">
         <p>Copyright © Disaster Risk Reduction Management</p>
         <p>All Rights Reserved</p>
@@ -402,3 +431,4 @@ $result = $conn->query($sql);
 <script src="../../assets/js/modal.js"></script>
 <script src="../../assets/js/modal.js"></script>
 </html>
+

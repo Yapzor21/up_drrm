@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+// Prevent caching of the login page
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
+header("Pragma: no-cache"); // HTTP 1.0
+header("Expires: 0"); // Proxies
+
+// Check if the user is already logged in
+if (isset($_SESSION['admin_id'])) {
+    // User is already logged in, redirect to the dashboard
+    header("Location: views/admin/main_dashboard.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,29 +28,38 @@
             <h1>WELCOME!</h1>
             <p class="subtitle"> Login to your account</p>
     
-            <form id="loginForm">
+            <form id="loginForm" method="post" action="controllers/admin_control.php">
                 <div class="form-group">
-                    <label for="email">Admin User Id</label>
+                        <input type="hidden" name="step" value="1">
+                    <label for="admin_id">Admin User Id</label>
                     <div class="input-wrapper">
-                        <input type="email" id="email" required>
+                        <input type="number" id="number" name="admin_id" required>
                     </div>
     
                     <label for="password">Password</label>
                     <div class="input-wrapper">
-                        <input type="password" id="password" required>
+                        <input type="password" id="password" name ="password" required>
                         <button type="button" class="toggle-password" onclick="togglePassword('password')">
-                            <svg class="pass" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="pass" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                             stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                 <circle cx="12" cy="12" r="3"/>
                             </svg>
                         </button>
+                        
                     </div>
                     <div class="forgot">
                         <a href="#">Forgot Password?</a>
                     </div>
-
+                    <?php 
+                        if (isset($_SESSION['error'])) {
+                        echo "<div class='error-message'>" . $_SESSION['error'] . "</div>";
+                        unset($_SESSION['error']); 
+                        }
+                        ?>
                     <div class="login">
-                       <a href="views\admin\main_dashboard.php" class="login-btn"> <strong>Login</strong></a>
+                    <button type="submit" class="login-btn"><strong>Login</strong></button>
                     </div>
 
                     <div class="divider">OR</div>
@@ -44,9 +68,7 @@
                         <a href="views\authentication\login_user.php" class="community"> <strong>Community Log In</strong></a>
                      </div>
 
-                    <div class="link">
-                        <p class="login-link">Don't Have an Account Yet? <a href="views\authentication\adminstep1.php">Create Your Account</a></p>
-                    </div>
+                    
                 </div>
             </form>
         </div>
@@ -56,7 +78,9 @@
                 <img src="assets\images\Rectangle 1012.png" alt="">
             </div>
             <h1>Welcome to DRRM</h1>
-            <p>This is a place for dedicated volunteers, emergency responders, and community members to connect, coordinate, and respond to disasters efficiently. Stay informed, receive real-time alerts, and be part of a life-saving network.</p>
+            <p>This is a place for dedicated volunteers, emergency responders, and community 
+                members to connect, coordinate, and respond to disasters efficiently. Stay 
+                informed, receive real-time alerts, and be part of a life-saving network.</p>
         </div>
     </div>
 </body>

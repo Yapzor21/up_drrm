@@ -13,5 +13,4 @@ function getFlash($key) {
     return null;
 }
 
-
 ?>
