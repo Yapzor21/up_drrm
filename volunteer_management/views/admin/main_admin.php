@@ -1,10 +1,4 @@
 <?php
-/*
-require_once '../../config/database.php';
-
-$sql = "SELECT * FROM user_report ORDER BY Date_Reported DESC";
-$result = $conn->query($sql);
-*/
 require_once '../../controllers/report_control.php';
 
 // instanciate a class to access the methods and properties of the class
@@ -234,6 +228,7 @@ $message = $controller->getMessage();
             </table>
         </div>
 
+        <!-- next to work --> 
         <div class="table-container">
         <div class="search-container">
             <div class="title-header"><h3>Assigned Team</h3></div>

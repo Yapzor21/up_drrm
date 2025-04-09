@@ -32,6 +32,7 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
                  <ol><a href="#">Account</a></ol>
                  <ol><a href="../../views\user\community_dashboard.php">Community</a></ol>
                  <ol><a href="main_admin.php">Admin</a></ol>
+                 <a href="../../controllers/logout.php" id="logout-link">Logout</a>
             </ul>
         </nav>
         </div>
@@ -52,8 +53,9 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
         <nav id="nav-menu">
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="#" id="dashboard-link">Account</a>
-            <a href="../../views\user\community_dashboard.php" id="community-link">Community</a>
+            <a href="../../views/user/community_dashboard.php" id="community-link">Community</a>
             <a href="main_admin.php" id="admin-link">Admin</a>
+            <a href="../../controllers/logout.php" style="float: right;">Logout</a>
         </nav>
     </header>
 

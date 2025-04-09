@@ -41,6 +41,7 @@ $message = $controller->getMessage();
                  <ol><a href="#">Dashboard</a></ol>
                  <ol><a href="community_report.php">Account</a></ol>
                  <ol><a href="#">Admin</a></ol>
+                 <a href="../../controllers/logout1.php" id="logout-link">Logout</a>
             </ul>
         </nav>
         </div>
@@ -61,8 +62,7 @@ $message = $controller->getMessage();
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="community_report.php" id="community-link">Account</a>
             <a href="#" id="admin-link">About us</a>
-            <a href="switch.php">click me</a>
-
+            <a href="../../controllers/logout1.php" id="logout-link">Logout</a>
         </nav>
     </header>
 

@@ -74,7 +74,7 @@ class UserReportModel {
 
                     // If there's a gap, reset auto_increment to fill it
                     if ($next_id > 1) {
-                        $reset_sql = "ALTER TABLE user_report AUTO_INCREMENT = " . $next_id;
+                        $reset_sql = "ALTER TABLE user_report AUTO_INCREMENT = 1 " . $next_id;
                         $this->conn->query($reset_sql);
                     }
                 }
@@ -176,7 +176,7 @@ class UserReportModel {
         */
 
         /*
-                          ***REPORTING***
+                             ***REPORTING***
          - fetch all unique values in the Disaster_Type column from the user_report table.
          - building an array $disasterTypes that holds these unique disaster type values.
          - 
@@ -196,20 +196,17 @@ class UserReportModel {
                         ***REPORTING***
             -  creates an array of three years
             - The current year and the two previous years
-            - Function and the strtotime() function to subtract one and two years
+            - Function and the strtotime()
+            - questions for ms. dynamic year frame 
             
             */ 
             $years = [
-                date('Y'),
-                date('Y', strtotime('-1 year')),
-                date('Y', strtotime('-2 year'))
+                date('Y')
             ];
             
             $datasets = [];
             $colors = [
                 ['rgba(54, 162, 235, 0.7)', 'rgba(54, 162, 235, 1)'],  // Blue
-                ['rgba(255, 99, 132, 0.7)', 'rgba(255, 99, 132, 1)'],  // Red
-                ['rgba(104, 100, 236, 0.7)', 'rgba(104, 100, 236, 1)']   // Purple
             ];
             
             // Loop through each year and fetch counts grouped by disaster type

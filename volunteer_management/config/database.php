@@ -1,6 +1,6 @@
 <?php
 class Database {
-    private $host = "localhost";
+    private $host = "localhost:3306";
     private $db_name = "s2300587_new";
     private $username = "s2300587_new";
     private $password = "group1*";
@@ -23,12 +23,12 @@ class Database {
             echo "Connection failed!";
         }
     }
-
+/*
     function connectDB() {
         $servername = "localhost";
         $username = "root";
-        $password = "group1*";
-        $dbname = "";
+        $password = "";
+        $dbname = "drrm";
         
         $conn = new mysqli($servername, $username, $password,  $dbname);
         
@@ -38,7 +38,7 @@ class Database {
         
         return $conn;
     }
-
+*/
 }
 
 

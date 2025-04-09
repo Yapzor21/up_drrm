@@ -1,11 +1,6 @@
 <?php
-
-
-// Correct path:
-require_once __DIR__ . '/../config/config.php';  // Go up one level and access the config folder
-require_once __DIR__ . '/../config/Database.php';
-
-
+require_once __DIR__ . '/../config/config.php'; // Correct path for the config
+require_once __DIR__ . '/../config/Database.php'; 
 
 class UserModel {
     private $conn;
@@ -15,40 +10,21 @@ class UserModel {
         $this->conn = $database->connect();
     }
 
+    // Insert user data into the database
     public function insertUser($email, $password, $phone, $city, $barangay, $gender, $community_role, $skills_interest, $first_name, $middle_name, $last_name, $dob) {
         try {
             // Check if the email already exists
             if ($this->isEmailExist($email)) {
-                return "duplicate_email"; // Return a specific error code for duplicate email
+                return "duplicate_email"; // Return a specific error for duplicate email
             }
     
-            // If the email does not exist, proceed with insertion
+            // If email does not exist, proceed with insertion
             $query = "INSERT INTO users (
-                email_address,
-                password,
-                phone_number,
-                city,
-                barangay,
-                gender,
-                community_role,
-                skills_interest, 
-                firstName,
-                middleName,
-                lastName,
-                dob
+                email_address, password, phone_number, city, barangay, gender, community_role, skills_interest, 
+                firstName, middleName, lastName, dob
             ) VALUES (
-                :email,
-                :password, 
-                :phone, 
-                :city, 
-                :barangay, 
-                :gender,
-                :community_role,
-                :skills_interest,
-                :first_name,
-                :middle_name,
-                :last_name,
-                :dob
+                :email, :password, :phone, :city, :barangay, :gender, :community_role, :skills_interest,
+                :first_name, :middle_name, :last_name, :dob
             )";
     
             $stmt = $this->conn->prepare($query);
@@ -77,59 +53,31 @@ class UserModel {
         }
     }
 
-    public function isEmailExist($email){
-        try{
+    // Check if the email already exists in the database
+    public function isEmailExist($email) {
+        try {
             $query = "SELECT * FROM users WHERE email_address = :email";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":email", $email);
             $stmt->execute();
-
-            //If a row is found, the email already exists
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
-    public function login($email, $password) {
-    try {
-        $query = "SELECT * FROM users WHERE email_address = :email";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":email", $email);
-        $stmt->execute();
 
-        // Fetch the user
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Login successful
-            return $user;
-        } else {
-            // Login failed
+    // Get user details by email for login
+    public function getUserByEmail($email) {
+        try {
+            $query = "SELECT * FROM users WHERE email_address = :email";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":email", $email);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
             return false;
-        }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        return false;
-    }
-}
-
-    public function userLogin(){
-        if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['action']) && $_POST ['action'] == 'login'){
-            $email = $_POST[email];
-            $password = $_POST[password];
-
-            $user = this -> userModel -> login($email, $password);
-            
-        if($user){
-            $_SESSION['user'] = $user;
-            header("location : ../views/dashboard.php");
-            exit();
-        } else {
-            $_SESSION['error'] = "Invalid email or password";
-            header("location : ../views/login.php");
-            exit();
-        }
         }
     }
 }
