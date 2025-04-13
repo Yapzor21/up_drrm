@@ -1,11 +1,21 @@
+
 <?php
-class Database {
-    private $host = "localhost";
+/*
+private $host = "localhost";
     private $db_name = "s2300587_new";
     private $username = "s2300587_new";
     private $password = "group1*";
     public $conn;
+ 
+*/
+class Database {
+    private $host = "localhost";
+    private $db_name = "s2300587_drrm";
+    private $username = "root";
+    private $password = "";
+    public $conn;
 
+    
     public function connect() {
         $this->conn = null;
         try {
@@ -24,7 +34,7 @@ class Database {
         }
     }
 
-    function connectDB() {
+   /* function connectDB() {
         $servername = "localhost";
         $username = "root";
         $password = "group1*";
@@ -37,13 +47,13 @@ class Database {
         }
         
         return $conn;
-    }
+    }*/
 
 }
 
 
 // akon ni local host na database ( isli lang ang name sang database) simo nga part para mag work simo  
-
+/*
 $servername = "localhost:3306";
 $username = "s2300587_new"; 
 $password = "group1*"; 
@@ -55,5 +65,5 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+*/
 ?>

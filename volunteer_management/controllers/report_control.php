@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../model/report.php';
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '../../model/report.php';
+require_once __DIR__ . '../../config/database.php';
 
 if (isset($_POST['submit_report'])) {
     // Create controller instance
@@ -14,37 +14,57 @@ if (isset($_POST['submit_report'])) {
 }
 
 if (isset($_POST['update_submit'])) {
-    // Create controller instance
+    // Connect to database using PDO
+    $db = new Database();
+    $conn = $db->connect(); // Returns a PDO instance
+
+    // Create controller instance and pass PDO connection
     $controller = new UserReportController($conn);
+
+    // Set the action to update if not already set
     if (!isset($_POST['action'])) {
         $_POST['action'] = 'update';
     }
-    
-    // Handle the request
+
+    // Handle the update request
     $controller->handleRequest();
 }
 
 if (isset($_POST['delete'])) {
-    // Create controller instance
+    // Connect to database using PDO
+    $db = new Database();
+    $conn = $db->connect(); // This returns a PDO instance
+
+    // Create controller instance and pass PDO connection
     $controller = new UserReportController($conn);
+
+    // Set the action if not already set
     if (!isset($_POST['action'])) {
         $_POST['action'] = 'delete';
     }
-    
-    // Handle the request
+
+    // Handle the delete request
     $controller->handleRequest();
 }
 
 class UserReportController {
     private $model;
     private $message = "";
+    private $conn;
+ 
     
     public function __construct($conn) {
+        $this->conn = $conn;
         $this->model = new UserReportModel($conn);
     }
 
     public function getMessage() {
         return $this->message;
+    }
+    public function getAllReports() {
+        $stmt = $this->conn->prepare("SELECT * FROM user_report ORDER BY Date_Reported DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return reports as an associative array
     }
     
     public function handleRequest() {
@@ -129,7 +149,24 @@ class UserReportController {
         return $this->model->getDisasterTypeData();
     }
     
-    
+  
 }
+class TeamController {
+    private $teamModel;
+
+    public function __construct($conn) {
+        // Instantiate the TeamModel with the database connection
+        $this->teamModel = new TeamModel($conn);
+    }
+
+    public function getTeams() {
+        // Fetch all teams from the database
+        $teams = $this->teamModel->getAllTeams();
+        
+        // Pass the teams data to the view (assuming you're using a method to render a view)
+        include 'views/admin/main_admin.php';
+    }
+}
+
 ?>
 

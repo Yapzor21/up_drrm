@@ -29,6 +29,7 @@ if (isset($_SESSION['admin_id'])) {
             <p class="subtitle"> Login to your account</p>
     
             <form id="loginForm" method="post" action="controllers/admin_control.php">
+
                 <div class="form-group">
                         <input type="hidden" name="step" value="1">
                     <label for="admin_id">Admin User Id</label>

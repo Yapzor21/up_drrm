@@ -1,9 +1,14 @@
 
 <?php
 require_once '../../controllers/report_control.php';
-
+require_once '../../config/database.php';
+require_once '../../model/report.php';
 // instanciate class
+$db = new Database();
+$conn = $db->connect(); // ✅ get the PDO connection
+
 $controller = new UserReportController($conn);
+
 
 // Get chart data
 $locationData = $controller->getLocationChartData();
@@ -30,7 +35,6 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
             <ul>
                  <ol><a href="#">Dashboard</a></ol>
                  <ol><a href="#">Account</a></ol>
-                 <ol><a href="../../views\user\community_dashboard.php">Community</a></ol>
                  <ol><a href="main_admin.php">Admin</a></ol>
             </ul>
         </nav>
@@ -54,6 +58,7 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
             <a href="#" id="dashboard-link">Account</a>
             <a href="../../views\user\community_dashboard.php" id="community-link">Community</a>
             <a href="main_admin.php" id="admin-link">Admin</a>
+            <a href="../../controllers/logout.php" style="float: right;">Logout</a>
         </nav>
     </header>
 

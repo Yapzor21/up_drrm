@@ -6,7 +6,8 @@ $sql = "SELECT * FROM user_report ORDER BY Date_Reported DESC";
 $result = $conn->query($sql);
 */
 require_once '../../controllers/report_control.php';
-
+$db = new Database();
+$conn = $db->connect(); // ✅ get the PDO connection
 // instanciate a class to access the methods and properties of the class
 $controller = new UserReportController($conn);
 
@@ -212,8 +213,8 @@ $message = $controller->getMessage();
                 </thead>
                 <tbody id="resources-table">
                 <?php
-                        if ($result && $result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) { 
+                        if ($result && count($result) > 0) {
+                            foreach ($result as $row) {
                                 echo "<td>" . $row["Disaster_Type"] . "</td>";
                                 echo "<td>" . $row["Location"] . "</td>";
                                 echo "<td>" . $row["Description"] . "</td>";
@@ -252,29 +253,30 @@ $message = $controller->getMessage();
                     </tr>
                 </thead>
                 <tbody id="disaster-table">
-                <?php foreach ($teams as $team): ?>
-                    <tr data-id="<?php echo htmlspecialchars($team['disaster_type']); ?>">
-                        <td><?php echo htmlspecialchars($team['disaster_type']); ?></td>
-                        <td>
-                            <?php 
-                                $datetime = $team['date_started'] . ' ' . $team['time_started'];
-                                echo htmlspecialchars($datetime); 
-                            ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($team['assigned_team']); ?></td>
-                        <td><?php echo htmlspecialchars($team['area']); ?></td>
-                        <td>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
+                <?php if (!empty($teams)): ?>
+                    <?php foreach ($teams as $team): ?>
+                        <tr data-id="<?php echo htmlspecialchars($team['disaster_type']); ?>">
+                            <td><?php echo htmlspecialchars($team['disaster_type']); ?></td>
+                            <td>
+                                <?php 
+                                    $datetime = $team['date_started'] . ' ' . $team['time_started'];
+                                    echo htmlspecialchars($datetime); 
+                                ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($team['assigned_team']); ?></td>
+                            <td><?php echo htmlspecialchars($team['area']); ?></td>
+                            <td>
+                                <button class="edit-btn">Edit</button>
+                                <button class="delete-btn">Delete</button>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
-                <?php if (empty($teams)): ?>
+                <?php else: ?>
                     <tr>
-                        <td colspan="8">No records found</td>
+                        <td colspan="5">No records found</td>
                     </tr>
                 <?php endif; ?>
-                </tbody>
+            </tbody>
             </table>
         </div>
 
@@ -308,6 +310,13 @@ $message = $controller->getMessage();
                     </tr>
                 </tbody>
             </table>
+            <div class="print_report">
+                <form method="POST" action="../../controllers/pdf.php">
+                <button class="print_report_bts" type="submit">Print Report</button>
+
+                </form>
+
+            </div>
         </div>
 
        
@@ -431,4 +440,3 @@ $message = $controller->getMessage();
 <script src="../../assets/js/modal.js"></script>
 <script src="../../assets/js/modal.js"></script>
 </html>
-

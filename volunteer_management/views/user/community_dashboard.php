@@ -8,6 +8,12 @@ if (!isset($_SESSION['user'])) {
     header("Location: ../views/authentication/login_user.php");
     exit();
 }
+$db = new Database(); // assuming you have a Database class in database.php
+$conn = $db->connect();
+
+$reportModel = new UserReportModel($conn);
+$controller = new UserReportController($reportModel);
+$controller->handleRequest();
 
 // instanciate a class to access the methods and properties of the class
 $controller = new UserReportController($conn);
