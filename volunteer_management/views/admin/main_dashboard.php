@@ -5,10 +5,9 @@ require_once '../../config/database.php';
 require_once '../../model/report.php';
 // instanciate class
 $db = new Database();
-$conn = $db->connect(); // ✅ get the PDO connection
+$conn = $db->connect();
 
 $controller = new UserReportController($conn);
-
 
 // Get chart data
 $locationData = $controller->getLocationChartData();
@@ -56,7 +55,6 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
         <nav id="nav-menu">
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="#" id="dashboard-link">Account</a>
-            <a href="../../views\user\community_dashboard.php" id="community-link">Community</a>
             <a href="main_admin.php" id="admin-link">Admin</a>
             <a href="../../controllers/logout.php" style="float: right;">Logout</a>
         </nav>
@@ -67,6 +65,7 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
             <img src="../../assets/images/Frame 1 (1).svg" alt="">
         </div>
         <div id="right-section">
+        <button class="btns btn-alert" id="btnAlert" onclick="openModal('reportModal')">Create Alert</button>
             <div id="time-box">
                 <div id="time-label">Philippine Standard Time</div>
                 <div id="ph-time" class="time"></div>
@@ -74,6 +73,32 @@ $disasterTypeData = $controller->getDisasterTypeChartData();
             </div>
         </div>
     </div>
+
+    <!-- Alert modal -->
+    <div class="modal" id="reportModal" >
+        <div class="modal-content" onclick="stopPropagation()" >
+            <button class="close-button" onclick="closeModal('reportModal')">×</button>
+            <h3>Create Alert</h3>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="disasterType">Disaster Type</label>
+                    <input type="text" id="disasterType" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location"> Exact Location</label>
+                    <input type="text" id="location" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description of Disaster</label>
+                    <textarea id="description" required></textarea>
+                </div>
+                <button type="submit" class="submit-button">Create</button>
+            </form>
+        </div>
+    </div>
+
 
     <!-- cahart -->
     <div class="chart-container">
@@ -199,4 +224,7 @@ const disasterTypeData = <?php echo json_encode($disasterTypeData); ?>;
 </script>
 <script src="../../assets/js/timelynews.js"></script>
 <script src="../../assets/js/charts.js"></script>
+<script src="../../assets/js/header.js"></script>
+<script src="../../assets/js/modal.js"></script>
+
 </html>

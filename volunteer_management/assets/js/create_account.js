@@ -4,8 +4,6 @@ function togglePassword(inputId) {
     input.type = type;
 }
 
-
-
 // select barangay
 const barangays = [
     'Alijis', 'Banago', 'Bata', 'Granada', 'Mandalagan',

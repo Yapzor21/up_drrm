@@ -4,83 +4,74 @@ require_once __DIR__ . '/../config/database.php'; // Make sure $pdo is defined i
 
 
 class UserReportModel {
-    private $pdo;
+    private $pdo; // Use a single property name consistently
     
     public function __construct($pdo) {
+        // Just store the passed PDO connection
         $this->pdo = $pdo;
     }
-    // In report_control.php
-
 
     public function getAllReports() {
         $stmt = $this->pdo->query("SELECT * FROM user_report ORDER BY Report_Id ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+   
     public function getReportById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM user_report WHERE Report_Id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createReport($disasterType, $location, $reporter, $contact, $description) {
+    public function createReport($disasterType, $location, $city, $reporter, $contact, $description) {
         $date_reported = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO user_report (Disaster_Type, Location, Description, Name_of_Reporter, Contact_Number, Date_Reported) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user_report (Disaster_Type, Location, City, Description, Name_of_Reporter, Contact_Number, Date_Reported) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$disasterType, $location, $description, $reporter, $contact, $date_reported]);
+        return $stmt->execute([$disasterType, $location, $city, $description, $reporter, $contact, $date_reported]);
     }
 
-    public function updateReport($id, $disasterType, $location, $reporter, $contact, $description) {
+    public function updateReport($id, $disasterType, $location, $city,  $reporter, $contact, $description) {
         $sql = "UPDATE user_report SET 
                 Disaster_Type = ?, 
                 Location = ?, 
+                City = ?,
                 Description = ?, 
                 Name_of_Reporter = ?, 
                 Contact_Number = ? 
                 WHERE Report_Id = ?";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$disasterType, $location, $description, $reporter, $contact, $id]);
+        return $stmt->execute([$disasterType, $location, $city, $description, $reporter, $contact, $id]);
     }
+
+    public function getCities() {
+        $stmt = $this->pdo->query("SELECT DISTINCT City FROM user_report WHERE City IS NOT NULL ORDER BY City");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+    
 
     public function deleteReport($id) {
         $stmt = $this->pdo->prepare("DELETE FROM user_report WHERE Report_Id = ?");
         $result = $stmt->execute([$id]);
 
-        if ($result) {
-            $count = $this->pdo->query("SELECT COUNT(*) as count FROM user_report")->fetch(PDO::FETCH_ASSOC)['count'];
-            if ($count > 0) {
-                $nextIdQuery = "
-                    SELECT MIN(t1.Report_Id + 1) AS next_id
-                    FROM user_report t1
-                    LEFT JOIN user_report t2 ON t1.Report_Id + 1 = t2.Report_Id
-                    WHERE t2.Report_Id IS NULL";
-                $nextId = $this->pdo->query($nextIdQuery)->fetch(PDO::FETCH_ASSOC)['next_id'];
-
-                if ($nextId > 1) {
-                    $this->pdo->exec("ALTER TABLE user_report AUTO_INCREMENT = $nextId");
-                }
-            } else {
-                $this->pdo->exec("ALTER TABLE user_report AUTO_INCREMENT = 1");
-            }
-        }
-
         return $result;
     }
 
+
+    // add limit for top 3 cities and others as ms dairin suggested
     public function getLocationData() {
-        $sql = "SELECT Location, COUNT(*) as count FROM user_report GROUP BY Location ORDER BY count DESC";
+        $sql = "SELECT City, COUNT(*) as count FROM user_report GROUP BY City ORDER BY count DESC";
         $stmt = $this->pdo->query($sql);
 
-        $locations = [];
+        $city = [];
         $counts = [];
-        $topLocations = 3;
+        $topcity = 3;
         $i = 0;
         $otherCount = 0;
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($i < $topLocations) {
-                $locations[] = $row['Location'];
+            if ($i < $topcity) {
+                $city[] = $row['City'];
                 $counts[] = $row['count'];
             } else {
                 $otherCount += $row['count'];
@@ -89,11 +80,11 @@ class UserReportModel {
         }
 
         if ($otherCount > 0) {
-            $locations[] = 'Others';
+            $city[] = 'Others';
             $counts[] = $otherCount;
         }
 
-        return ['labels' => $locations, 'data' => $counts];
+        return ['labels' => $city, 'data' => $counts];
     }
 
     public function getDisasterTypeData() {
@@ -146,23 +137,5 @@ class UserReportModel {
         ];
     }
 }
-class TeamModel {
-    private $conn;
 
-    public function __construct($conn) {
-        $this->conn = $conn; // Store the PDO connection
-    }
-
-    // Fetch all teams using PDO
-    public function getAllTeams() {
-        // Prepare the query
-        $stmt = $this->conn->prepare("SELECT * FROM teams");
-        
-        // Execute the query
-        $stmt->execute();
-        
-        // Fetch all results as an associative array
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-}
-
+?>

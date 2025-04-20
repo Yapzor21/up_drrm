@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '../../model/report.php';
-require_once __DIR__ . '../../config/database.php';
 
+
+// In report_control.php
 if (isset($_POST['submit_report'])) {
     // Create controller instance
     $controller = new UserReportController($conn);
@@ -51,21 +52,30 @@ class UserReportController {
     private $model;
     private $message = "";
     private $conn;
+
+    public function __construct($conn = null) {
+        if ($conn === null) {
+            // Create database connection if not provided
+            $db = new Database();
+            $conn = $db->connect();
+        }
+        
+        // Create model with connection
+        $this->model = new UserReportModel($conn);
+        $this->conn = $conn;
+    }
  
-    
+    /*
     public function __construct($conn) {
         $this->conn = $conn;
         $this->model = new UserReportModel($conn);
     }
-
+    */
     public function getMessage() {
         return $this->message;
     }
-    public function getAllReports() {
-        $stmt = $this->conn->prepare("SELECT * FROM user_report ORDER BY Date_Reported DESC");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return reports as an associative array
-    }
+    
+  
     
     public function handleRequest() {
         $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
@@ -91,11 +101,12 @@ class UserReportController {
             // Get form data
             $disasterType = ucwords($_POST['disasterType']);
             $location = ucwords($_POST['location']);
+            $city = ucwords($_POST['city']);
             $reporter = ucwords($_POST['reporter']);
             $contact = ucwords($_POST['contact']);
             $description = ucwords($_POST['description']);
             
-            if ($this->model->createReport($disasterType, $location, $reporter, $contact, $description)) {
+            if ($this->model->createReport($disasterType, $location, $city,  $reporter, $contact, $description)) {
                 $this->message = "Report submitted successfully";
                 header("Location: ../views/user/community_report.php");
                 exit();
@@ -111,11 +122,12 @@ class UserReportController {
             $id = $_POST['report_id'];
             $disasterType = ucwords($_POST['disasterType']);
             $location = ucwords($_POST['location']);
+            $city = ucwords($_POST['city']);
             $reporter = ucwords($_POST['reporter']);
             $contact = $_POST['contact'];
             $description = ucwords($_POST['description']);
             
-            if ($this->model->updateReport($id, $disasterType, $location, $reporter, $contact, $description)) {
+            if ($this->model->updateReport($id, $disasterType, $location, $city, $reporter, $contact, $description)) {
                 $this->message = "Report updated successfully";
                 header("Location: ../views/admin/main_admin.php");
                 exit();
@@ -149,23 +161,11 @@ class UserReportController {
         return $this->model->getDisasterTypeData();
     }
     
-  
-}
-class TeamController {
-    private $teamModel;
-
-    public function __construct($conn) {
-        // Instantiate the TeamModel with the database connection
-        $this->teamModel = new TeamModel($conn);
+    
+    public function getCities() {
+        return $this->model->getCities();
     }
-
-    public function getTeams() {
-        // Fetch all teams from the database
-        $teams = $this->teamModel->getAllTeams();
-        
-        // Pass the teams data to the view (assuming you're using a method to render a view)
-        include 'views/admin/main_admin.php';
-    }
+    
 }
 
 ?>

@@ -1,22 +1,17 @@
 <?php
-/*
-require_once '../../config/database.php';
-
-$sql = "SELECT * FROM user_report ORDER BY Date_Reported DESC";
-$result = $conn->query($sql);
-*/
 require_once '../../controllers/report_control.php';
-$db = new Database();
-$conn = $db->connect(); // ✅ get the PDO connection
-// instanciate a class to access the methods and properties of the class
-$controller = new UserReportController($conn);
+require_once '../../controllers/assigned_control.php';
+
+$controller = new UserReportController(null);
+$teamController = new TeamController(null);
 
 // ga based sa actions sang user so ang deafult action is to view all reports
 $result = $controller->handleRequest();
+  // Get all team assignments
+$final = $teamController->handleRequest();
 
 $message = $controller->getMessage();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +56,10 @@ $message = $controller->getMessage();
             <a href="#" id="admin-link">Admin</a>
         </nav>
     </header>
-    <div id="sub-header">
+
+    <!-- sub-header 
+     
+        <div id="sub-header">
         <div id="drrm-logor">
             <img src="../../assets/images/Frame 1 (1).svg" alt="">
         </div>
@@ -72,8 +70,33 @@ $message = $controller->getMessage();
                 <div id="ph-date" class="date"></div>
             </div>
         </div>
+
+          <div class="button-containers">
+            <button class="btns btn-alert" id="btnAlert" onclick="openModal('reportModal')">Create Alert</button>
+        </div>
     </div>
     
+
+    //original
+      <button id="report-btn" class="report-btn" onclick="openModal('reportModal')">REPORT</button>
+    
+    -->
+
+    <div id="sub-header">
+        <div id="drrm-logor">
+            <img src="../../assets/images/Frame 1 (1).svg" alt="">
+        </div>
+        <div id="right-section">
+        <button class="btns btn-alert" id="btnAlert" onclick="openModal('reportModal')">Create Alert</button>
+            <div id="time-box">
+                <div id="time-label">Philippine Standard Time</div>
+                <div id="ph-time" class="time"></div>
+                <div id="ph-date" class="date"></div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- create alert-->
     <div class="modal" id="reportModal" >
         <div class="modal-content" onclick="stopPropagation()" >
@@ -101,40 +124,41 @@ $message = $controller->getMessage();
 
 
     <!-- assigned team  -->
-    <div class="modal" id="recordModal" >
-        <div class="modal-content" onclick="stopPropagation()" >
-            <button class="close-button"  onclick="closeModal('recordModal')">×</button>
-            <h3>New Record</h3>
+    <div class="modal" id="assignModal">
+    <div class="modal-content">
+         <span class="close">&times;</span>
+        <h3>Assign Team</h3>
 
-            <form id="reportForm">
-                <div class="form-group">
-                    <label for="disasterType">Disaster Type</label>
-                    <input type="text" id="disasterType" required>
-                </div>
+        <form id="assignTeamForm" method="post" action="../../controllers/assigned_control.php">
+            <input type="hidden" id="report_id" name="report_id">
+            <div class="form-group">
+                <label for="disasterType">Disaster Type</label>
+                <input type="text" id="disasterType" name="disasterType" disabled>
+            </div>
 
-                <div class="form-group">
-                    <label for="location"> Time Started</label>
-                    <input type="datetime-local" id="time" required>
-                </div>
+            <div class="form-group">
+                <label for="timeStarted">Time Started</label>
+                <input type="time" id="timeStarted" name="timeStarted" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="Assigned Team">Assigned Team </label>
-                    <input type="text" id="Team" required>
-                </div>
+            <div class="form-group">
+                <label for="assignedTeam">Assigned Team</label>
+                <input type="text" id="assignedTeam" name="assignedTeam" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="Affected Areas">Affected Areas</label>
-                    <textarea id="Areas" required></textarea>
-                </div>
-                <button type="submit" class="submit-button"> Insert Records </button>
-            </form>
-        </div>
+            <div class="confirm">
+                <button type="submit" name="assign_submit" class="submit-button">Assign Team</button>
+                <button type="button" onclick="closeModal('assignModal')">Cancel</button>
+            </div>
+        </form>
     </div>
+</div>
+
 
         <!-- Delete Confirmation Modal -->
         <div id="deleteModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+        <span class="close" onclick="closeModal('updateTeamModal')">&times;</span>
             <h3>Confirm Delete</h3>
             <p>Are you sure you want to delete this report?</p>
             <form method="post" action="../../controllers/report_control.php">
@@ -146,9 +170,44 @@ $message = $controller->getMessage();
             </form>
         </div>
     </div>
-    
-    <!-- Update Modal -->
-    <div id="updateModal" class="modal">
+
+ <!-- Update assigned team Modal -->
+<div id="updateTeamModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Update Team Assignment</h3>
+        <form method="post" action="../../controllers/assigned_control.php">
+            <input type="hidden" id="update_team_id" name="report_id">
+            <div class="form-group">
+                <label for="updateDisasterType">Disaster Type</label>
+                <input type="text" id="updateDisasterType" name="disasterType" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="updateTimeStarted">Time Started</label>
+                <input type="time" id="updateTimeStarted" name="timeStarted"  required>
+            </div>
+
+            <div class="form-group">
+                <label for="updateAssignedTeam">Assigned Team</label>
+                <input type="text" id="updateAssignedTeam" name="assignedTeam" required>
+            </div>
+
+            <div class="form-group">
+                <label for="updateAffectedAreas">Affected Areas</label>
+                <input type="text" id="updateAffectedAreas" name="affectedAreas" required>
+            </div>
+            <div class="confirm">
+                <button type="submit" name="update_team_submit" class="submit-button">Update Assignment</button>
+                <button type="button" onclick="closeModal('updateTeamModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Update report Modal  -->
+<div id="updateModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Update Report</h3>
@@ -161,10 +220,16 @@ $message = $controller->getMessage();
                 </div>
                 
                 <div class="form-group">
-                    <label for="location">Location:</label>
+                    <label for="location">Address:</label>
                     <input type="text" id="location" name="location" required>
+
+                <label for="city" style="margin-top: 8px;">City:</label>
+                <select id="city" name="city" required>
+                <option value="" disabled selected>Select City</option>
+                <!-- Cities will be populated via JavaScript -->
+                </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" rows="4" required></textarea>
@@ -189,9 +254,9 @@ $message = $controller->getMessage();
     </div>
 
 
-
 <div class="wrapper">
     <div class="main-content">
+
          <div class="table-container">
             <div class="search-container">
             <div class="title-header"><h3>Reports</h3></div>
@@ -201,40 +266,47 @@ $message = $controller->getMessage();
             
             <table>
                 <thead>
-                    <tr>
+                        <tr>
+                        <th>Report_Id</th>
                         <th>Disaster Type</th>
-                        <th>Location</th>
+                        <th>Address</th>
+                        <th>City</th>
                         <th>Description</th>
                         <th>Name of Reporter</th>
                         <th>Contact Number</th>
                         <th>Date_Reported</th>
-                        <th>Actions</th>
-                    </tr>
+                        <th>Opeation </th>
+                        </tr>
                 </thead>
-                <tbody id="resources-table">
-                <?php
-                        if ($result && count($result) > 0) {
-                            foreach ($result as $row) {
-                                echo "<td>" . $row["Disaster_Type"] . "</td>";
-                                echo "<td>" . $row["Location"] . "</td>";
-                                echo "<td>" . $row["Description"] . "</td>";
-                                echo "<td>" . $row["Name_of_Reporter"] . "</td>";
-                                echo "<td>" . $row["Contact_Number"] . "</td>";
-                                echo "<td>" . $row["Date_Reported"] . "</td>";
-                                echo "<td>
-                                        <button class='edit-btn' data-id='" .   $row["Report_Id"] . "'>Edit</button>
-                                        <button class='delete-btn' data-id='" . $row["Report_Id"] . "'>Delete</button>
-                                      </td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='8' style='text-align:center'>No reports found</td></tr>";
+                    <tbody>
+                        <?php
+                    if ($result && is_array($result) && count($result) > 0) {
+                        foreach($result as $row) { 
+                            echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
+                            echo "<td>" . $row["Report_Id"] . "</td>";
+                            echo "<td>" . $row["Disaster_Type"] . "</td>";
+                            echo "<td>" . $row["Location"] . "</td>";
+                            echo "<td>" . $row["City"] . "</td>";
+                            echo "<td>" . $row["Description"] . "</td>";
+                            echo "<td>" . $row["Name_of_Reporter"] . "</td>";
+                            echo "<td>" . $row["Contact_Number"] . "</td>";
+                            echo "<td>" . $row["Date_Reported"] . "</td>";
+                            echo "<td>
+                            <button class='edit-btn' data-id='" .   $row["Report_Id"] . "'>Edit</button>
+                            <button class='delete-btn' data-id='" . $row["Report_Id"] . "'>Delete</button>
+                                 </td>";
+
+                            echo "</tr>";
                         }
-                        ?>
+                    } else {
+                        echo "<tr><td colspan='7' style='text-align:center'>No reports found</td></tr>";
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
 
+        <!-- Assigned Team Table -->
         <div class="table-container">
         <div class="search-container">
             <div class="title-header"><h3>Assigned Team</h3></div>
@@ -249,41 +321,37 @@ $message = $controller->getMessage();
                         <th>Time Started</th>
                         <th>Assigned Team</th>
                         <th>Affected Areas</th>
-                        <th>Actions</th>
+                        <th>Operations</th>
                     </tr>
                 </thead>
-                <tbody id="disaster-table">
-                <?php if (!empty($teams)): ?>
-                    <?php foreach ($teams as $team): ?>
-                        <tr data-id="<?php echo htmlspecialchars($team['disaster_type']); ?>">
-                            <td><?php echo htmlspecialchars($team['disaster_type']); ?></td>
-                            <td>
-                                <?php 
-                                    $datetime = $team['date_started'] . ' ' . $team['time_started'];
-                                    echo htmlspecialchars($datetime); 
-                                ?>
-                            </td>
-                            <td><?php echo htmlspecialchars($team['assigned_team']); ?></td>
-                            <td><?php echo htmlspecialchars($team['area']); ?></td>
-                            <td>
-                                <button class="edit-btn">Edit</button>
-                                <button class="delete-btn">Delete</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5">No records found</td>
-                    </tr>
-                <?php endif; ?>
+                <tbody>
+                <?php
+                     if ($final && is_array($final) && count($final) > 0) {
+                        foreach($final as $row) { 
+                            echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
+                            echo "<td>" . $row["Disaster_Type"] . "</td>";
+                            // remove the miliseconds and microseconds
+                            $time = date('H:i', strtotime($row["time_started"]));
+                            echo "<td>" . $time . " " . $row["Date_Reported"] . "</td>";
+                            echo "<td>" . $row["assigned_team"] . "</td>";
+                            echo "<td>" . $row["Location"] . ", " . $row["City"] . "</td>";
+                            echo "<td>
+                                <button class='assign-btn ' data-id='" . $row["Report_Id"] . "'>Assign</button>
+                                <button class='edit-team-btn edit-btn' data-id='" . $row["Report_Id"] . "'>Update</button>
+                                <button class='delete-btn' data-id='" . $row["Report_Id"] . "'>Delete</button>
+                              </td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='5' style='text-align:center'>No team assignments found</td></tr>";
+                    }
+                ?>
+                
             </tbody>
             </table>
         </div>
 
-        <div class="button-containers">
-            <button class="btns btn-new" id="btnNew" onclick="openModal('recordModal')">New Records</button>
-            <button class="btns btn-alert" id="btnAlert" onclick="openModal('reportModal')">Create Alert</button>
-        </div>
+      
 
         <div class="table-container">
         <div class="search-container">
@@ -318,8 +386,6 @@ $message = $controller->getMessage();
 
             </div>
         </div>
-
-       
     </div>
 
     <div class="personnel-sidebar">
@@ -378,8 +444,9 @@ $message = $controller->getMessage();
         </div>
     </div>
 </div>
-  <!--footer sheeshh-->
 
+
+  <!--footer sheeshh-->
   <footer class="footer">
     <div class="footer-content">
         <div class="footer-grid">
@@ -428,8 +495,6 @@ $message = $controller->getMessage();
         </div>
     </div>
 
-    
-
     <div class="copyright">
         <p>Copyright © Disaster Risk Reduction Management</p>
         <p>All Rights Reserved</p>
@@ -438,5 +503,7 @@ $message = $controller->getMessage();
 </body>
 <script src="../../assets/js/timelynews.js"></script>
 <script src="../../assets/js/modal.js"></script>
-<script src="../../assets/js/modal.js"></script>
-</html>
+<script src="../../assets/js/dropdown.js"></script>
+<script src="../../assets/js/assigned.js"></script>
+<script src="../../assets/js/header.js"></script>
+</html> 

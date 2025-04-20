@@ -93,13 +93,13 @@ body{
     align-items: center;
     flex-wrap: wrap;
 }
-#report-btn.report-btn{
+#btnAlert{
 
    font-weight: medium;
    border: solid 1px black;
 }
 
-#report-btn {
+#btnAlert {
     background-color: #ff0000;
     color: white;
     height: 70px;
@@ -108,6 +108,8 @@ body{
     font-size: 20px;
     cursor: pointer;
 }
+
+
 #time-label{
     color: #ff0000;
 }
@@ -611,3 +613,12 @@ footer shess
     margin-bottom: 20px;
     text-transform: uppercase;
 }
+
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+

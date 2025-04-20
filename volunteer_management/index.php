@@ -66,10 +66,8 @@ if (isset($_SESSION['admin_id'])) {
                     <div class="divider">OR</div>
 
                     <div class="community">
-                        <a href="views\authentication\login_user.php" class="community"> <strong>Community Log In</strong></a>
+                        <a href="views/authentication/login_user.php" class="community"> <strong>Community Log In</strong></a>
                      </div>
-
-                    
                 </div>
             </form>
         </div>

@@ -1,4 +1,3 @@
-
 const modal = document.getElementById('reportModal');
 const reportForms = document.getElementById('reportForm');
 
@@ -50,17 +49,7 @@ function openModal(modalId) {
        updateModal.style.display = "none";
    }
    
-   // Close modals when clicking outside
-   window.onclick = function(event) {
-       if (event.target == deleteModal) {
-           deleteModal.style.display = "none";
-       }
-       if (event.target == updateModal) {
-           updateModal.style.display = "none";
-       }
-   }
-   
-
+  
     // update
    document.querySelectorAll('.edit-btn').forEach(button => {
        button.addEventListener('click', function(e) {
@@ -69,7 +58,25 @@ function openModal(modalId) {
         const reportId = this.getAttribute('data-id');
         document.getElementById("update_report_id").value = reportId
 
+        // Get the parent row to extract data
+        const row = this.closest('tr');
+        
+        // Extract data from the row cells
+        const disasterType = row.cells[1].textContent;
+        const location = row.cells[2].textContent;
+        const description = row.cells[4].textContent;
+        const reporter = row.cells[5].textContent;
+        const contact = row.cells[6].textContent;
+        
+        // Fill the form fields with the extracted data
+        document.getElementById("updateModal").querySelector('#disasterType').value = disasterType;
+        document.getElementById("updateModal").querySelector('#location').value = location;
+        document.getElementById("updateModal").querySelector('#description').value = description;
+        document.getElementById("updateModal").querySelector('#reporter').value = reporter;
+        document.getElementById("updateModal").querySelector('#contact').value = contact;
+
            updateModal.style.display = "flex";
+
        });
    });
    
@@ -85,11 +92,14 @@ function openModal(modalId) {
            deleteModal.style.display = "flex";
        });
    });
-   
 
 
+   /**
+    * 
+    * 
+    * 
+    * 
+    * ASSIGNED TEAM MODAL
+    */
 
-  
-
-
-
+// Modal functions

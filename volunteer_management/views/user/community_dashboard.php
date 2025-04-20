@@ -8,20 +8,18 @@ if (!isset($_SESSION['user'])) {
     header("Location: ../views/authentication/login_user.php");
     exit();
 }
-$db = new Database(); // assuming you have a Database class in database.php
+/*
+$db = new Database();
 $conn = $db->connect();
+*/
 
-$reportModel = new UserReportModel($conn);
-$controller = new UserReportController($reportModel);
-$controller->handleRequest();
+// Create a single controller instance with the database connection
+$controller = new UserReportController(null);
 
-// instanciate a class to access the methods and properties of the class
-$controller = new UserReportController($conn);
-
-// ga based sa actions sang user so ang deafult action is to view all reports
+// Get all reports
 $result = $controller->handleRequest();
 
-$message = $controller->getMessage();
+//$message = $controller->getMessage();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,8 +65,7 @@ $message = $controller->getMessage();
             <a href="#" id="dashboard-link">Dashboard</a>
             <a href="community_report.php" id="community-link">Account</a>
             <a href="#" id="admin-link">About us</a>
-            <a href="switch.php">click me</a>
-
+            <a href="../../controllers/logout1.php" style="float: right;">Logout</a>
         </nav>
     </header>
 
@@ -123,7 +120,7 @@ $message = $controller->getMessage();
             </form>
         </div>
     </div>
- 
+
     <!--heroin-->
     <!-- Swiper Container -->
     <div class="swiper mySwiper">

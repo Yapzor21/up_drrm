@@ -40,7 +40,6 @@
             <a href="main_dashboard.php" id="community_dashboard">Dashboard</a>
             <a href="#" id="admin-link">Account</a>
             <a href="main_admin.php">Admin</a>
-            <input type="text" placeholder="Search Here" id="search-box" class="search-box">
         </nav>
     </header>
     <div id="sub-header">
