@@ -26,6 +26,7 @@ class Database {
         }
         return $this->conn;
     }
+    
     public function testConnection() {
         if ($this->connect()) {
             echo "Connection successful!";

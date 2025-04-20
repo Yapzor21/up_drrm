@@ -108,6 +108,4 @@ class TeamController {
         return $this->model->getTeamAssignment($reportId);
     }
 }
-
-
 ?>

@@ -133,7 +133,7 @@ $message = $controller->getMessage();
             <input type="hidden" id="report_id" name="report_id">
             <div class="form-group">
                 <label for="disasterType">Disaster Type</label>
-                <input type="text" id="disasterType" name="disasterType" disabled>
+                <input type="text" id="disasterType" name="disasterType" required>
             </div>
 
             <div class="form-group">
@@ -180,7 +180,7 @@ $message = $controller->getMessage();
             <input type="hidden" id="update_team_id" name="report_id">
             <div class="form-group">
                 <label for="updateDisasterType">Disaster Type</label>
-                <input type="text" id="updateDisasterType" name="disasterType" disabled>
+                <input type="text" id="updateDisasterType" name="disasterType" required>
             </div>
 
             <div class="form-group">

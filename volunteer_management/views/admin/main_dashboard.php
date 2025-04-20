@@ -1,13 +1,7 @@
 
 <?php
 require_once '../../controllers/report_control.php';
-require_once '../../config/database.php';
-require_once '../../model/report.php';
-// instanciate class
-$db = new Database();
-$conn = $db->connect();
-
-$controller = new UserReportController($conn);
+$controller = new UserReportController(null);
 
 // Get chart data
 $locationData = $controller->getLocationChartData();
@@ -226,5 +220,5 @@ const disasterTypeData = <?php echo json_encode($disasterTypeData); ?>;
 <script src="../../assets/js/charts.js"></script>
 <script src="../../assets/js/header.js"></script>
 <script src="../../assets/js/modal.js"></script>
-
+    
 </html>

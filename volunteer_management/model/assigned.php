@@ -18,8 +18,7 @@ class TeamModel {
             return false; // Report doesn't exist
         }
         
-        // Update the report with team assignment information
-        // Removed the status column from the update statement
+
         $sql = "UPDATE user_report SET 
                 Disaster_Type = ?, 
                 time_started = ?, 
@@ -48,7 +47,7 @@ class TeamModel {
     }
     
     public function getAllTeamAssignments() {
-        $stmt = $this->pdo->query("SELECT Report_Id, Disaster_Type, time_started, Date_Reported, assigned_team, Location, City FROM user_report WHERE assigned_team IS NOT NULL ORDER BY Report_Id DESC");
+        $stmt = $this->pdo->query("SELECT Report_Id, Disaster_Type, time_started, Date_Reported, assigned_team, Location, City FROM user_report WHERE assigned_team IS NOT NULL ORDER BY Report_Id ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
