@@ -16,11 +16,11 @@ ASSIGNED TEAM TABLE CHANGE TO MODAL
 WORKING TASK: 
 - DONE AJAX ( upadate status without reload page)
 - assigned table to convert into modal
-- 
+- remove null parameter in main_admin view ( edit on controller and model)
 
 PENDING: 
 - How to add volunteer?? (kay hard coded palang ang mga records sang mga volunteers)
-- 
+- DISPATCH TABLE ( kung mag update status 
 - 
 
 IMPROVE: 
