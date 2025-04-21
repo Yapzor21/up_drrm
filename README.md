@@ -12,4 +12,7 @@ ASSIGNED TEAM TABLE CHANGE TO MODAL
 CHANGE BUTTON (EDIT AND DELETE)  TO ICON
 - SOURCE OF ICONS (https://fontawesome.com/icons)
 
+
+if possible (put ajax for contacts)
+
   
