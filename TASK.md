@@ -9,10 +9,25 @@ ASSIGNED TEAM TABLE CHANGE TO MODAL
 - IF MAG CLICK REPORT_ID OR DISASTER TYPE WHICH IS NAKA HYPERLINK
 - MA POP UP ANG MODAL NGA ASSIGNED TABLE
 
-CHANGE BUTTON (EDIT AND DELETE)  TO ICON
-- SOURCE OF ICONS (https://fontawesome.com/icons)
 
 
-if possible (put ajax for contacts)
+//if possible (put ajax for contacts)
+-------------------------------------------------------------------------------------------------
+WORKING TASK: 
+- DONE AJAX ( upadate status without reload page)
+- assigned table to convert into modal
+- 
+
+PENDING: 
+- How to add volunteer?? (kay hard coded palang ang mga records sang mga volunteers)
+- 
+- 
+
+IMPROVE: 
+- can add pagination on the records limit of 15 records only.
+- CHANGE BUTTON (EDIT AND DELETE)  TO ICON
+ SOURCE OF ICONS (https://fontawesome.com/icons)
+-
+
 
   
