@@ -72,11 +72,11 @@ class TeamController {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Get form data
             $reportId = $_POST['report_id'];
-            $disasterType = ucwords($_POST['disasterType']);
             $timeStarted = $_POST['timeStarted'];
             $assignedTeam = ucwords($_POST['assignedTeam']);
             
-            if ($this->model->assignTeam($reportId, $disasterType, $timeStarted, $assignedTeam)) {
+            // Don't pass the disaster type to the model
+            if ($this->model->assignTeam($reportId, $timeStarted, $assignedTeam)) {
                 $this->message = "Team assigned successfully";
                 header("Location: ../views/admin/main_admin.php");
                 exit();
@@ -90,11 +90,11 @@ class TeamController {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Get data from form
             $reportId = $_POST['report_id'];
-            $disasterType = ucwords($_POST['disasterType']);
             $timeStarted = $_POST['timeStarted'];
             $assignedTeam = ucwords($_POST['assignedTeam']);
             
-            if ($this->model->updateTeamAssignment($reportId, $disasterType, $timeStarted, $assignedTeam)) {
+            // Don't pass the disaster type to the model
+            if ($this->model->updateTeamAssignment($reportId, $timeStarted, $assignedTeam)) {
                 $this->message = "Team assignment updated successfully";
                 header("Location: ../views/admin/main_admin.php");
                 exit();

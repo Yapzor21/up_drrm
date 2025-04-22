@@ -1,4 +1,3 @@
-
 <?php
 require_once __DIR__ . '/../config/database.php';
 
@@ -9,7 +8,7 @@ class TeamModel {
         $this->pdo = $pdo;
     }
 
-    public function assignTeam($reportId, $disasterType, $timeStarted, $assignedTeam) {
+    public function assignTeam($reportId, $timeStarted, $assignedTeam) {
         // First check if the report exists
         $checkStmt = $this->pdo->prepare("SELECT Report_Id FROM user_report WHERE Report_Id = ?");
         $checkStmt->execute([$reportId]);
@@ -18,26 +17,25 @@ class TeamModel {
             return false; // Report doesn't exist
         }
         
-
+        // Remove Disaster_Type from the update
         $sql = "UPDATE user_report SET 
-                Disaster_Type = ?, 
                 time_started = ?, 
                 assigned_team = ?
                 WHERE Report_Id = ?";
                 
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$disasterType, $timeStarted, $assignedTeam, $reportId]);
+        return $stmt->execute([$timeStarted, $assignedTeam, $reportId]);
     }
     
-    public function updateTeamAssignment($reportId, $disasterType, $timeStarted, $assignedTeam) {
+    public function updateTeamAssignment($reportId, $timeStarted, $assignedTeam) {
+        // Remove Disaster_Type from the update
         $sql = "UPDATE user_report SET 
-                Disaster_Type = ?, 
                 time_started = ?, 
                 assigned_team = ?
                 WHERE Report_Id = ?";
                 
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$disasterType, $timeStarted, $assignedTeam, $reportId]);
+        return $stmt->execute([$timeStarted, $assignedTeam, $reportId]);
     }
     
     public function getTeamAssignment($reportId) {
@@ -51,6 +49,4 @@ class TeamModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-
-
 ?>

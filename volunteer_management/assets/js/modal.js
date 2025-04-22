@@ -102,4 +102,33 @@ function openModal(modalId) {
     * ASSIGNED TEAM MODAL
     */
 
+   document.addEventListener('DOMContentLoaded', function() {
+    // Get the report table
+    const reportTable = document.querySelector('.table-container:first-of-type table');
+    
+    if (reportTable) {
+        // Add click event listeners to the report_id and disaster_type cells
+        reportTable.addEventListener('click', function(e) {
+            // Check if the clicked element is in the first column (Report_Id) or second column (Disaster Type)
+            const cell = e.target.closest('td');
+            if (!cell) return;
+            
+            const row = cell.parentElement;
+            const cellIndex = Array.from(row.cells).indexOf(cell);
+            
+            // Only proceed if it's the Report_Id (0) or Disaster_Type (1) column
+            if (cellIndex === 0 || cellIndex === 1) {
+                // Get the report ID from the row
+                const reportId = row.cells[0].textContent;
+                
+                // Set the report ID in the viewReportModal if needed
+                // You might need to add a hidden input field for this
+                
+                // Open the modal
+                openModal('viewReportModal');
+            }
+        });
+    }
+});
+
 // Modal functions

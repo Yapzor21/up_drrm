@@ -957,4 +957,95 @@ th {
          font-size: 20px;
          cursor: pointer;
      }
+
+
+     
+     .personnel-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+    }
     
+    .personnel-item:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    
+    .deployed {
+        background-color: #4CAF50;
+    }
+    
+    .standby {
+        background-color: #FFC107;
+    }
+    
+    .phone-icon {
+        margin-left: auto;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    
+    .status-dropdown {
+        position: absolute;
+        right: 10px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: none;
+        z-index: 10;
+    }
+    
+    .status-dropdown.show {
+        display: block;
+    }
+    
+    .status-option {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    
+    .status-option:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .personnel-item .actions {
+        margin-left: auto;
+        cursor: pointer;
+    }
+    
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #333;
+        color: white;
+        padding: 15px;
+        border-radius: 4px;
+        display: none;
+        z-index: 1000;
+    }
+
+   
+  /* report table hyperlink report_id and disaster_type*/
+  
+/* Make the report_id and disaster_type cells look clickable */
+.table-container:first-of-type table tbody tr td:nth-child(1),
+.table-container:first-of-type table tbody tr td:nth-child(2) {
+    cursor: pointer;
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+.table-container:first-of-type table tbody tr td:nth-child(1):hover,
+.table-container:first-of-type table tbody tr td:nth-child(2):hover {
+    color: #004080;
+}
+

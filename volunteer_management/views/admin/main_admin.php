@@ -1,16 +1,25 @@
 <?php
 require_once '../../controllers/report_control.php';
 require_once '../../controllers/assigned_control.php';
+require_once '../../controllers/personnel_control.php';
 
-$controller = new UserReportController(null);
+// Initialize controllers
+$personnelController = new PersonnelController();
+$reportController = new UserReportController(null);
 $teamController = new TeamController(null);
 
-// ga based sa actions sang user so ang deafult action is to view all reports
-$result = $controller->handleRequest();
-  // Get all team assignments
+// Get personnel by status using the controller
+$deployed = $personnelController->getPersonnelByStatus('deployed');
+$standby = $personnelController->getPersonnelByStatus('standby');
+$oncall = $personnelController->getPersonnelByStatus('oncall');
+
+// Get all reports based on user actions
+$result = $reportController->handleRequest();
+
+// Get all team assignments
 $final = $teamController->handleRequest();
 
-$message = $controller->getMessage();
+$message = $reportController->getMessage();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +28,9 @@ $message = $controller->getMessage();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOVPH DRRM Dashboard</title>
     <link rel="stylesheet" href="../../assets/css/admin/main_admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
 
@@ -128,14 +140,9 @@ $message = $controller->getMessage();
     <div class="modal-content">
          <span class="close">&times;</span>
         <h3>Assign Team</h3>
-
         <form id="assignTeamForm" method="post" action="../../controllers/assigned_control.php">
             <input type="hidden" id="report_id" name="report_id">
-            <div class="form-group">
-                <label for="disasterType">Disaster Type</label>
-                <input type="text" id="disasterType" name="disasterType" required>
-            </div>
-
+         
             <div class="form-group">
                 <label for="timeStarted">Time Started</label>
                 <input type="time" id="timeStarted" name="timeStarted" required>
@@ -180,7 +187,7 @@ $message = $controller->getMessage();
             <input type="hidden" id="update_team_id" name="report_id">
             <div class="form-group">
                 <label for="updateDisasterType">Disaster Type</label>
-                <input type="text" id="updateDisasterType" name="disasterType" required>
+                <input type="text" id="updateDisasterType" name="disasterType" disabled>
             </div>
 
             <div class="form-group">
@@ -275,52 +282,55 @@ $message = $controller->getMessage();
                         <th>Name of Reporter</th>
                         <th>Contact Number</th>
                         <th>Date_Reported</th>
-                        <th>Opeation </th>
+                        <th>Operation </th>
                         </tr>
                 </thead>
                     <tbody>
-                        <?php
-                    if ($result && is_array($result) && count($result) > 0) {
-                        foreach($result as $row) { 
-                            echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
-                            echo "<td>" . $row["Report_Id"] . "</td>";
-                            echo "<td>" . $row["Disaster_Type"] . "</td>";
-                            echo "<td>" . $row["Location"] . "</td>";
-                            echo "<td>" . $row["City"] . "</td>";
-                            echo "<td>" . $row["Description"] . "</td>";
-                            echo "<td>" . $row["Name_of_Reporter"] . "</td>";
-                            echo "<td>" . $row["Contact_Number"] . "</td>";
-                            echo "<td>" . $row["Date_Reported"] . "</td>";
-                            echo "<td>
-                            <button class='edit-btn' data-id='" .   $row["Report_Id"] . "'>Edit</button>
-                            <button class='delete-btn' data-id='" . $row["Report_Id"] . "'>Delete</button>
-                                 </td>";
+                    <?php
+if ($result && is_array($result) && count($result) > 0) {
+    foreach($result as $row) { 
+        echo "<tr>";
+        echo "<td>" . $row["Report_Id"] . "</td>";
+        echo "<td>" . $row["Disaster_Type"] . "</td>";
+        echo "<td>" . $row["Location"] . "</td>";
+        echo "<td>" . $row["City"] . "</td>";
+        echo "<td>" . $row["Description"] . "</td>";
+        echo "<td>" . $row["Name_of_Reporter"] . "</td>";
+        echo "<td>" . $row["Contact_Number"] . "</td>";
+        echo "<td>" . $row["Date_Reported"] . "</td>";
+        echo "<td>
+            <i class='fas fa-edit edit-btn' style='cursor:pointer; margin: 0 8px;' data-id='" . $row["Report_Id"] . "'></i>
+            <i class='fas fa-trash delete-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "'></i>
+        </td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='9' style='text-align:center'>No reports found</td></tr>";
+}
+?>
 
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='7' style='text-align:center'>No reports found</td></tr>";
-                    }
-                    ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- Assigned Team Table -->
-        <div class="table-container">
+
+        <!-- Add this modal for viewing report details -->
+<div id="viewReportModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('viewReportModal')">&times;</span>
+
+        <div class="table-containers">
         <div class="search-container">
             <div class="title-header"><h3>Assigned Team</h3></div>
-            <div class="const"> <input type="text" id="searchInput" placeholder="Search team...">
-            <button id="searchButton">Search</button></div>
+            <!-- <div class="const"> <input type="text" id="searchInput" placeholder="Search team...">
+            <button id="searchButton">Search</button></div>  -->
             </div>
-            
             <table>
                 <thead>
                     <tr>
                         <th>Disaster Type</th>
                         <th>Time Started</th>
                         <th>Assigned Team</th>
-                        <th>Affected Areas</th>
                         <th>Operations</th>
                     </tr>
                 </thead>
@@ -328,17 +338,16 @@ $message = $controller->getMessage();
                 <?php
                      if ($final && is_array($final) && count($final) > 0) {
                         foreach($final as $row) { 
-                            echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
                             echo "<td>" . $row["Disaster_Type"] . "</td>";
+
                             // remove the miliseconds and microseconds
                             $time = date('H:i', strtotime($row["time_started"]));
                             echo "<td>" . $time . " " . $row["Date_Reported"] . "</td>";
                             echo "<td>" . $row["assigned_team"] . "</td>";
-                            echo "<td>" . $row["Location"] . ", " . $row["City"] . "</td>";
                             echo "<td>
-                                <button class='assign-btn ' data-id='" . $row["Report_Id"] . "'>Assign</button>
-                                <button class='edit-team-btn edit-btn' data-id='" . $row["Report_Id"] . "'>Update</button>
-                                <button class='delete-btn' data-id='" . $row["Report_Id"] . "'>Delete</button>
+                                <i class='fas fa-user-plus assign-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "' title='Assign'></i>
+                                <i class='fas fa-edit edit-btn' style='cursor:pointer; margin: 0 8px;' data-id='" . $row["Report_Id"] . "' title='Update'></i>
+                                <i class='fas fa-trash delete-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "' title='Delete'></i>
                               </td>";
                             echo "</tr>";
                         }
@@ -346,12 +355,13 @@ $message = $controller->getMessage();
                         echo "<tr><td colspan='5' style='text-align:center'>No team assignments found</td></tr>";
                     }
                 ?>
-                
             </tbody>
             </table>
         </div>
 
-      
+        
+    </div>
+</div>
 
         <div class="table-container">
         <div class="search-container">
@@ -391,59 +401,71 @@ $message = $controller->getMessage();
     <div class="personnel-sidebar">
         <div class="personnel">
             <h6>Personnel</h6> 
-            <img src="../../assets\images\down-arrow-svgrepo-com.svg" alt="">
-         </div>
+            <img src="../../assets/images/down-arrow-svgrepo-com.svg" alt="Toggle" id="toggle-sidebar">
+        </div>
+        
         <div class="personnel-section">
             <div class="section-title">Deployed</div>
             <ul class="personnel-list" id="deployed-list">
-                <li class="personnel-item">
+                <?php foreach ($deployed as $person): ?>
+                <li class="personnel-item" data-id="<?php echo $person['id']; ?>" data-status="deployed">
                     <span class="status-indicator deployed"></span>
-                    <span>Mark Cantos</span>
+                    <span><?php echo $person['name']; ?></span>
+                    <div class="actions">⋮</div>
+                    <div class="status-dropdown">
+                        <div class="status-option" data-status="deployed">Deployed</div>
+                        <div class="status-option" data-status="standby">Stand By</div>
+                        <div class="status-option" data-status="oncall">On Call</div>
+                    </div>
                 </li>
-                <li class="personnel-item">
-                    <span class="status-indicator deployed"></span>
-                    <span>Mark Cantos</span>
-                </li>
-                <li class="personnel-item">
-                    <span class="status-indicator deployed"></span>
-                    <span>Mark Cantos</span>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
 
         <div class="personnel-section">
             <div class="section-title">Stand By</div>
             <ul class="personnel-list" id="standby-list">
-                <li class="personnel-item">
+                <?php foreach ($standby as $person): ?>
+                <li class="personnel-item" data-id="<?php echo $person['id']; ?>" data-status="standby">
                     <span class="status-indicator standby"></span>
-                    <span>Mark Cantos</span>
+                    <span><?php echo $person['name']; ?></span>
+                    <div class="actions">⋮</div>
+                    <div class="status-dropdown">
+                        <div class="status-option" data-status="deployed">Deployed</div>
+                        <div class="status-option" data-status="standby">Stand By</div>
+                        <div class="status-option" data-status="oncall">On Call</div>
+                    </div>
                 </li>
-                <li class="personnel-item">
-                    <span class="status-indicator standby"></span>
-                    <span>Mark Cantos</span>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
 
         <div class="personnel-section">
             <div class="section-title">On Call</div>
             <ul class="personnel-list" id="on-call-list">
-                <li class="personnel-item">
-                    <span>Mark Cantos</span>
-                    <span class="phone-icon" onclick="makeCall('09770757048')">📞</span>
+                <?php foreach ($oncall as $person): ?>
+                <li class="personnel-item" data-id="<?php echo $person['id']; ?>" data-status="oncall">
+                    <span><?php echo $person['name']; ?></span>
+                    <span class="phone-icon" onclick="makeCall('<?php echo $person['phone']; ?>')">📞</span>
+                    <div class="actions">⋮</div>
+                    <div class="status-dropdown">
+                        <div class="status-option" data-status="deployed">Deployed</div>
+                        <div class="status-option" data-status="standby">Stand By</div>
+                        <div class="status-option" data-status="oncall">On Call</div>
+                    </div>
                 </li>
-                <li class="personnel-item">
-                    <span>Mark Cantos</span>
-                    <span class="phone-icon" onclick="makeCall('09770757048')">📞</span>
-                </li>
-                <li class="personnel-item">
-                    <span>Mark Cantos</span>
-                    <span class="phone-icon" onclick="makeCall('09770757048')">📞</span>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
     </div>
-</div>
+    
+    <div class="toast" id="toast"></div>
+
+
+    </div>
+  
+  
+
 
 
   <!--footer sheeshh-->
@@ -506,4 +528,5 @@ $message = $controller->getMessage();
 <script src="../../assets/js/dropdown.js"></script>
 <script src="../../assets/js/assigned.js"></script>
 <script src="../../assets/js/header.js"></script>
+<script src="../../assets/js/ajax.js"></script>
 </html> 

@@ -92,27 +92,33 @@ $result = $controller->handleRequest();
                
                 <input type="hidden" id="edit_report_id" name="report_id">
                 <div class="form-group">
-                    <label for="disasterType">Disaster Type</label>
+                    <label for="disasterType">Disaster Type:</label>
                     <input type="text" name="disasterType" id="disasterType" required>
                 </div>
 
+           <div class="form-group">
+            <label for="location">Address:</label>
+            <input type="text" name="location" id="address" required>
+    
+            <label for="city" style="margin-top: 8px;">City:</label>
+            <select id="city" name="city" required>
+            <option value="" disabled selected>Select City</option>
+                <!-- Cities will be populated via JavaScript -->
+            </select>
+            </div>
+    
                 <div class="form-group">
-                    <label for="location">Location</label>
-                    <input type="text" name="location" id="location" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="Reporter">Name of Reporter</label>
+                    <label for="Reporter">Name of Reporter:</label>
                     <input type="text" name="reporter" id="Reporter" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="contact">Contact No.</label>
+                    <label for="contact">Contact No.:</label>
                     <input type="tel" name="contact" id="contact">
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description of Disaster</label>
+                    <label for="description">Description of Disaster:</label>
                     <textarea id="description" name="description" required></textarea>
                 </div>
 

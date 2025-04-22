@@ -66,8 +66,8 @@ $message = $controller->getMessage();
         </div>
     </div>
     
-    <!-- modal of report-->
-    <div class="modal" id="reportModal" >
+     <!-- modal of report-->
+     <div class="modal" id="reportModal" >
         <div class="modal-content" onclick="stopPropagation()" >
             <button class="close-button" onclick="closeModal('reportModal')">×</button>
             <h3>Report Disaster</h3>
@@ -83,13 +83,31 @@ $message = $controller->getMessage();
             <label for="location">Address:</label>
             <input type="text" name="location" id="address" required>
     
-            <label for="city" style="
-     margin-top: 8px;">City:</label>
+            <label for="city" style="margin-top: 8px;">City:</label>
             <select id="city" name="city" required>
-                <option value="" disabled selected>Select City</option>
+            <option value="" disabled selected>Select City</option>
                 <!-- Cities will be populated via JavaScript -->
             </select>
-       
+            </div>
+    
+                <div class="form-group">
+                    <label for="Reporter">Name of Reporter:</label>
+                    <input type="text" name="reporter" id="Reporter" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact">Contact No.:</label>
+                    <input type="tel" name="contact" id="contact">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description of Disaster:</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <button type="submit" name="submit_report" class="submit-button" onclick="clicks()">Report</button>
+            </form>
+        </div>
     </div>
     
      <div class="form-group">
