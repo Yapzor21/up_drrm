@@ -29,5 +29,13 @@ IMPROVE:
  SOURCE OF ICONS (https://fontawesome.com/icons)
 -
 
+----------------------------------------------------------------------------------
+4/28/25  (monday) 
+FIX PROBLEM 
+- Community dashboard report modal
+- use checkbox for teamgroups on assign team table
+- 
+
+
 
   
