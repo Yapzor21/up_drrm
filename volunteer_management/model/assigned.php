@@ -45,7 +45,8 @@ class TeamModel {
     }
     
     public function getAllTeamAssignments() {
-        $stmt = $this->pdo->query("SELECT Report_Id, Disaster_Type, time_started, Date_Reported, assigned_team, Location, City FROM user_report WHERE assigned_team IS NOT NULL ORDER BY Report_Id ASC");
+        $stmt = $this->pdo->query("SELECT Report_Id, Disaster_Type, time_started, Date_Reported, assigned_team, Location, City 
+        FROM user_report WHERE assigned_team IS NOT NULL ORDER BY Report_Id ASC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -43,9 +43,7 @@
                         <a href="login_user.php" class="community"> <strong>Community Log In</strong></a>
                      </div>
 
-                    <div class="link">
-                        <p class="login-link">Don't Have an Account Yet? <a href="adminstep1.php">Create Your Account</a></p>
-                    </div>
+                    
                 </div>
             </form>
         </div>

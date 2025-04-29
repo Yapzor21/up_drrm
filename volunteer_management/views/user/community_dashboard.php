@@ -3,11 +3,7 @@ require_once '../../controllers/report_control.php';
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['user'])) {
-    // User is not logged in, redirect to the login page
-    header("Location: ../views/authentication/login_user.php");
-    exit();
-}
+
 /*
 $db = new Database();
 $conn = $db->connect();
@@ -30,7 +26,8 @@ $result = $controller->handleRequest();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="../../assets/css/user/main.css">
      <!-- ../../assets/css/user/main.css -->
-    <title>GOVPH DRRM Dashboard</title>
+    <title>Community Dashboard</title>
+    <link rel = "icon" type="image/svg+xml" href="../../assets/images/iconLogo1.svg">
 </head>
 <body>
 

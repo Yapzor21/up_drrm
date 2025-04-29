@@ -1,18 +1,30 @@
 
 <?php
-/*
-private $host = "localhost";
-    private $db_name = "s2300587_new";
-    private $username = "s2300587_new";
-    private $password = "group1*";
+/* mark database connection ( DO NOT REMOVE !!!! )
+  private $host = "localhost";
+    private $db_name = "s2300587_drrm";
+    private $username = "root";
+    private $password = "";
     public $conn;
- 
-*/
-class Database {
+
+---------------------------------------
+
+
+       HELIO DATABASE CONNECTION
+
     private $host = "localhost";
     private $db_name = "s2300587_new";
     private $username = "s2300587_new";
     private $password = "group1*";
+    public $conn;
+
+   
+*/
+class Database {
+    private $host = "localhost";
+    private $db_name = "s2300587_drrm";
+    private $username = "root";
+    private $password = "";
     public $conn;
 
     

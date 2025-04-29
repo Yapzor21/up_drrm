@@ -26,10 +26,13 @@ $message = $reportController->getMessage();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOVPH DRRM Dashboard</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../assets/css/admin/main_admin.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel = "icon" type="image/svg+xml" href="../../assets/images/iconLogo1.svg">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- jQuery -->
+
 
 </head>
 <body>
@@ -267,8 +270,30 @@ $message = $reportController->getMessage();
          <div class="table-container">
             <div class="search-container">
             <div class="title-header"><h3>Reports</h3></div>
-            <div class="const"> <input type="text" id="searchInput" placeholder="Search reports...">
+            <div class="const"> <input type="text" id="searchInput" placeholder="Search reports..." autocomplete="off">
             <button id="searchButton">Search</button></div>
+            <script>
+        // AJAX to send search data to PHP file
+       /* $(document).ready(function() {
+            $('#search').keyup(function() {
+                let query = $(this).val();  // Get the search input
+
+                if (query.length > 0) {
+                    $.ajax({
+                        url: 'search.php',  // The PHP file that handles the search
+                        method: 'GET',
+                        data: { search: query },
+                        success: function(response) {
+                            $('#results').html(response);  // Display the results
+                        }
+                    });
+                } else {
+                    $('#results').html("");  // Clear results when search is empty
+                }
+            });
+        });
+        */
+    </script>
             </div>
             
             <table>
