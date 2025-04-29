@@ -34,7 +34,7 @@ IMPROVE:
 FIX PROBLEM 
 - Community dashboard report modal
 - use checkbox for teamgroups on assign team table
-- 
+- Put ajax for report
 
 
 
