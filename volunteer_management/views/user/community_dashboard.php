@@ -295,6 +295,7 @@ $result = $controller->handleRequest();
     <script src="../../assets/js/modal.js"></script>
     <script src="../../assets/js/carousel.js"></script>
     <script src="../../assets/js/timelynews.js"></script>
+    <script src="../../assets/js/dropdown.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="../../assets/js/swiper.js"></script>
 </body>

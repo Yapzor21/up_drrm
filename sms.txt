@@ -1,0 +1,2 @@
+# SMS Activity Log
+# Format: [Timestamp] Recipient: Phone Number, Message: Message Content, Response: API Response

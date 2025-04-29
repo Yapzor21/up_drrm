@@ -20,6 +20,7 @@ $result = $reportController->handleRequest();
 $final = $teamController->handleRequest();
 
 $message = $reportController->getMessage();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,8 +33,6 @@ $message = $reportController->getMessage();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel = "icon" type="image/svg+xml" href="../../assets/images/iconLogo1.svg">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- jQuery -->
-
-
 </head>
 <body>
 
@@ -113,30 +112,34 @@ $message = $reportController->getMessage();
 
 
     <!-- create alert-->
-    <div class="modal" id="reportModal" >
-        <div class="modal-content" onclick="stopPropagation()" >
-            <button class="close-button" onclick="closeModal('reportModal')">×</button>
-            <h3>Create Alert</h3>
-            <form id="reportForm">
-                <div class="form-group">
-                    <label for="disasterType">Disaster Type</label>
-                    <input type="text" id="disasterType" required>
-                </div>
+    <div class="modal" id="reportModal">
+    <div class="modal-content" onclick="stopPropagation()">
+        <button class="close-button" onclick="closeModal('reportModal')">×</button>
+        <h3>Create Alert</h3>
+        <form id="reportForm" method="POST" action="../../controllers/sms_control.php">
+            <div class="form-group">
+                <label for="disasterType">Disaster Type</label>
+                <input type="text" id="disasterType" name="disasterType" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="location"> Exact Location</label>
-                    <input type="text" id="location" required>
-                </div>
+            <div class="form-group">
+                <label for="location">Exact Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="description">Description of Disaster</label>
-                    <textarea id="description" required></textarea>
-                </div>
-                <button type="submit" class="submit-button">Create</button>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="description">Description of Disaster</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            
+            <div class="alert-info">
+                <p><strong>Note:</strong> This alert will be sent via SMS to all registered contact numbers.</p>
+            </div>
+            
+            <button type="submit" name="create_alert" class="submit-button">Create & Send Alert</button>
+        </form>
     </div>
-
+</div>
 
     <!-- assigned team  -->
     <div class="modal" id="assignModal">

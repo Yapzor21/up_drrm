@@ -7,6 +7,14 @@
     private $password = "";
     public $conn;
 
+    adrian database connection ( DO NOT REMOVE !!!! )
+    private $host = "localhost";
+    private $db_name = "drrm";
+    private $username = "root";
+    private $password = "";
+    public $conn;
+
+
 ---------------------------------------
 
 
@@ -22,11 +30,10 @@
 */
 class Database {
     private $host = "localhost";
-    private $db_name = "s2300587_drrm";
-    private $username = "root";
-    private $password = "";
+    private $db_name = "s2300587_new";
+    private $username = "s2300587_new";
+    private $password = "group1*";
     public $conn;
-
     
     public function connect() {
         $this->conn = null;
