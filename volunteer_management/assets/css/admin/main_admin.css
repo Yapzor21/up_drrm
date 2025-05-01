@@ -262,7 +262,6 @@ body{
 
 
 /*modal of report*/
-
 .modal {
     display: none;
     position: fixed;
@@ -274,6 +273,7 @@ body{
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow: hidden;
 }
 
 .modal.active {
@@ -281,14 +281,45 @@ body{
 }
 
 .modal-content {
-    background-color: #E6E6FA;
+    background-color: #d9d9d9;
     padding: 20px;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh; /* Limit height to 90% of viewport height */
     position: relative;
+    overflow-y: auto; /* Add scrolling to the modal content */
 }
 
+/* Make form elements more compact */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    box-sizing: border-box; /* Ensure padding doesn't add to width */
+}
+
+.form-group textarea {
+    height: 80px; /* Reduced height */
+    resize: vertical;
+}
+
+/* Keep other styles the same */
 .close-button {
     position: absolute;
     top: 10px;
@@ -311,34 +342,9 @@ body{
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 14px;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
-}
-
-.form-group textarea {
-    height: 120px;
-    resize: vertical;
-}
-
 .submit-button {
     width: 100%;
-    padding: 12px;
+    padding: 10px; /* Slightly reduced padding */
     background-color: #FF0000;
     color: white;
     border: none;
@@ -351,6 +357,8 @@ body{
 .submit-button:hover {
     background-color: #D00000;
 }
+
+
 
 /* 
 footer shess

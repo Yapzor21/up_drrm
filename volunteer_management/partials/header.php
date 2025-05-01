@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/user/headerxfooter.css">
-</head>
-<body>
+
 <header id="top-header">
     <div class="logos">
         <a href="#" id="drrm-logo">
@@ -20,6 +13,7 @@
             <a href="community_dashboard.php" id="community_dashboard">Dashboard</a>
             <a href="../views/user/community_report.php" id="admin-link">Account</a>
             <ol> <a href="community.php">About us</a></ol>
+            <a href="../../controllers/logout1.php">Logout</a>
         </nav>
     </header>
     <div id="sub-header">
@@ -36,5 +30,3 @@
         </div>
     </div>
     
-</body>
-</html>

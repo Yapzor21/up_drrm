@@ -13,10 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_alert'])) {
     // Compose the SMS message
     $message = "ALERT: $disasterType reported at $location. Details: $description. — DRRM Team";
 
- 
+
      $database = new Database();
      $pdo = $database->connect(); 
-
 
     // Load all contact numbers
     $model = new UserReportModel($pdo);
@@ -72,9 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_alert'])) {
 
     curl_close($ch);
 
-    echo "<script>alert(' Alert successfully sent!'); window.location.href='../../../views/admin/main_admin.php';</script>";
-   
-    header("Location: ../../../views/admin/main_admin.php?status=success");
+    echo "<script>alert(' Alert successfully sent!'); 
+    window.location.href='../views/admin/main_admin.php';</script>";
+ 
 exit;
 
 }

@@ -30,9 +30,9 @@
 */
 class Database {
     private $host = "localhost";
-    private $db_name = "s2300587_new";
-    private $username = "s2300587_new";
-    private $password = "group1*";
+    private $db_name = "drrm";
+    private $username = "root";
+    private $password = "";
     public $conn;
     
     public function connect() {

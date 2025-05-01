@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/css/user/headerxfooter.css">
 
-</head>
-<body>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-grid">
@@ -60,5 +52,3 @@
         <p>All Rights Reserved</p>
     </div>
 </footer>
-</body>
-</html>
