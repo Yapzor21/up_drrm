@@ -71,7 +71,7 @@ if (isset($_SESSION['user_email'])) {
         </div>
     </form>
     <div class="link">
-        <p class="login-link">Don't Have an Account Yet? <a href="views/authentication/adminstep1.php">Create Your Account</a></p>
+        <p class="login-link">Don't Have an Account Yet? <a href="views/authentication/step1.php">Create Your Account</a></p>
     </div>
                     
         </div>

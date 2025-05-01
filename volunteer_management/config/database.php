@@ -30,7 +30,7 @@
 */
 class Database {
     private $host = "localhost";
-    private $db_name = "drrm";
+    private $db_name = "s2300587_drrm";
     private $username = "root";
     private $password = "";
     public $conn;

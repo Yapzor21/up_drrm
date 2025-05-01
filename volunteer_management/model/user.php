@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/config.php'; // Correct path for the config
-require_once '../config/database.php'; 
+require_once __DIR__ . '/../config/database.php';
 
 class UserModel {
     private $conn;

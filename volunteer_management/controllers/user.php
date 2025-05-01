@@ -70,7 +70,7 @@ class UserController {
                 if ($inserted) {
                     // Registration successful
                     session_destroy();
-                    header("Location: ../../views/authentication/login_user.php");
+                    header("Location: ../../index.php");
                     exit();
                 } else {
                     // Insertion failed
