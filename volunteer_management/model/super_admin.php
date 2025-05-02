@@ -8,12 +8,12 @@ class Employee
         $this->pdo = $pdo;
     }
 
-    public function createEmployee($hashed_password, $role, $first_name, $middle_name, $last_name,$contact_num)
+    public function createEmployee($hashed_password, $role, $first_name, $middle_name, $last_name,$contact_num,$volunteerType)
     {
         try {
-            $stmt = $this->pdo->prepare("INSERT INTO employee (password, role, first_name, middle_name, last_name, contact_num) 
-            VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$hashed_password, $role, $first_name, $middle_name, $last_name, $contact_num]);
+            $stmt = $this->pdo->prepare("INSERT INTO employee (password, role, first_name, middle_name, last_name, contact_num, volunteerType) 
+            VALUES (?, ?, ?, ?, ?, ?,?)");
+            $stmt->execute([$hashed_password, $role, $first_name, $middle_name, $last_name, $contact_num, $volunteerType]);
             return $this->pdo->lastInsertId();
         } catch (PDOException $e) {
             throw new Exception("Database Error: " . $e->getMessage());

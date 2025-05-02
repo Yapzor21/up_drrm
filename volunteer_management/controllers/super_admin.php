@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = ($_POST['password']);
     $confirm_password = ($_POST['confirm_password']);
     $role = ($_POST['role']);
+    $volunteerType = ($_POST['volunteerType']);
 
     if ($password !== $confirm_password) {
         echo "<script>alert('Passwords do not match!'); window.history.back();</script>";
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $last_inserted_id = $employee->createEmployee($hashed_password, $role, $fname, 
-        $mname, $lname,$contact_num);
+        $mname, $lname,$contact_num, $volunteerType);
             session_destroy();
             echo "<script>alert('Registration Successful!'); window.location.href = '../index.php';</script>";
             
