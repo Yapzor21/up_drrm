@@ -42,10 +42,14 @@ FIX PROBLEM
 --------------------------------------------------------
 ONGOING TASK 5/3/25 -ADRIAN  
 - assigned volunteers to team
-- fix problem ( controller super_admin and model)
+- fix problem ( controller super_admin and model) 
 - views ( empty array on volunteers) no records found
- 
 
+ -----------------------------------------------------
+ ONGOING TASK 5/4/25 -ADRIAN
+ -report details ( assigned team on disaster type are working needs to display it on web) // ang assignment
+ -feel ko ang report details e separate lang na table para hapos
+ -ara sa helio ang updated nga database
 >>>>>>> 567fd6bc25d8d338c73f35cd3a1a87a998930167
 
   
