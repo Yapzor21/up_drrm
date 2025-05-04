@@ -31,11 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $last_inserted_id = $employee->createEmployee($hashed_password, $role, $fname, 
         $mname, $lname,$contact_num, $volunteerType);
             session_destroy();
-            echo "<script>alert('Registration Successful!'); window.location.href = '../index.php';</script>";
+            echo "<script>alert('Registration Successful!'); window.location.href = '../views/admin/teams.php';</script>";
             
     } catch (Exception $e) {
         echo "<script>alert('Error: " . $e->getMessage() . "'); window.history.back();</script>";
         exit();
     }
+  
 }
+
+
 ?>

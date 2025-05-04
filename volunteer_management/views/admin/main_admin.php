@@ -3,10 +3,11 @@ require_once '../../controllers/report_control.php';
 require_once '../../controllers/assigned_control.php';
 require_once '../../controllers/personnel_control.php';
 
+
 // Initialize controllers
 $personnelController = new PersonnelController();
 $reportController = new UserReportController(null);
-$teamController = new TeamController(null);
+
 
 // Get personnel by status using the controller
 $deployed = $personnelController->getPersonnelByStatus('deployed');
@@ -15,10 +16,28 @@ $oncall = $personnelController->getPersonnelByStatus('oncall');
 
 // Get all reports based on user actions
 $result = $reportController->handleRequest();
-// Get all team assignments
-$final = $teamController->handleRequest();
-
 $message = $reportController->getMessage();
+
+
+require_once '../../model/assigned.php';
+require_once '../../model/teams.php';
+require_once '../../config/database.php';
+
+
+// Create database connection
+$database = new Database();
+$db = $database->connect();
+
+
+$team = new Team($db);
+$assignment = new Assignment($db);
+
+// Get all teams
+$teams = $team->getAllTeams();
+
+// Check if a report ID is provided for assignment
+$reportIdForAssignment = isset($_GET['report_id']) ? $_GET['report_id'] : null;
+$showAssignModal = isset($_GET['action']) && $_GET['action'] === 'assign';
 
 ?>
 <!DOCTYPE html>
@@ -88,21 +107,26 @@ $message = $reportController->getMessage();
 </div>
 
     <!-- assigned team  -->
-    <div class="modal" id="assignModal">
+  <!-- Assign Team Modal -->
+<div class="modal" id="assignModal" <?php echo $showAssignModal ? 'style="display: block;"' : ''; ?>>
     <div class="modal-content">
-         <span class="close">&times;</span>
+        <span class="close" onclick="closeModal('assignModal')">&times;</span>
         <h3>Assign Team</h3>
         <form id="assignTeamForm" method="post" action="../../controllers/assigned_control.php">
-            <input type="hidden" id="report_id" name="report_id">
-         
+            <input type="hidden" id="report_id" name="report_id" value="<?php echo $reportIdForAssignment; ?>">
+            
             <div class="form-group">
                 <label for="timeStarted">Time Started</label>
                 <input type="time" id="timeStarted" name="timeStarted" required>
             </div>
 
             <div class="form-group">
-                <label for="assignedTeam">Assigned Team</label>
-                <input type="text" id="assignedTeam" name="assignedTeam" required>
+                <?php foreach ($teams as $teamItem): ?>
+                <div>
+                    <input type="checkbox" name="<?php echo strtolower($teamItem['name']); ?>" id="team_<?php echo $teamItem['id']; ?>">
+                    <label for="team_<?php echo $teamItem['id']; ?>"><?php echo ucfirst($teamItem['name']); ?></label>
+                </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="confirm">
@@ -112,7 +136,6 @@ $message = $reportController->getMessage();
         </form>
     </div>
 </div>
-
 
         <!-- Delete Confirmation Modal -->
         <div id="deleteModal" class="modal">
@@ -251,6 +274,7 @@ if ($result && is_array($result) && count($result) > 0) {
         echo "<td>" . $row["Contact_Number"] . "</td>";
         echo "<td>" . $row["Date_Reported"] . "</td>";
         echo "<td>
+            <i class='fas fa-user-plus assign-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "' title='Assign'></i>
             <i class='fas fa-edit edit-btn' style='cursor:pointer; margin: 0 8px;' data-id='" . $row["Report_Id"] . "'></i>
             <i class='fas fa-trash delete-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "'></i>
         </td>";
@@ -272,7 +296,7 @@ if ($result && is_array($result) && count($result) > 0) {
 
         <div class="table-containers">
         <div class="search-container">
-            <div class="title-header"><h3>Assigned Team</h3></div>
+            <div class="title-header"><h3>Report Details</h3></div>
             <!-- <div class="const"> <input type="text" id="searchInput" placeholder="Search team...">
             <button id="searchButton">Search</button></div>  -->
             </div>
@@ -287,8 +311,8 @@ if ($result && is_array($result) && count($result) > 0) {
                 </thead>
                 <tbody>
                 <?php
-                     if ($final && is_array($final) && count($final) > 0) {
-                        foreach($final as $row) { 
+                     if ($result && is_array($result) && count($result) > 0) {
+                        foreach($result as $row) { 
                             echo "<td>" . $row["Disaster_Type"] . "</td>";
 
                             // remove the miliseconds and microseconds

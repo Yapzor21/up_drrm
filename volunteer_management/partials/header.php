@@ -12,6 +12,7 @@
         <nav id="nav-menu">
             <a href="community_dashboard.php" id="community_dashboard">Dashboard</a>
             <a href="../views/user/community_report.php" id="admin-link">Account</a>
+            <a href="../views/admin/main_admin.php" id="admin-link">Admin</a>
             <ol> <a href="community.php">About us</a></ol>
             <a href="../../controllers/logout1.php">Logout</a>
         </nav>

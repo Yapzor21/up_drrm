@@ -1,112 +1,72 @@
 <?php
 require_once __DIR__ . '/../model/assigned.php';
+require_once __DIR__ . '/../model/teams.php';
 require_once __DIR__ . '/../config/database.php';
 
-// Handle form submissions
+
+$database = new Database();
+$db = $database->connect();
+
+$assignment = new Assignment($db);
+$team = new Team($db);
+
+// Handle form submission
 if (isset($_POST['assign_submit'])) {
-    // Create controller instance
-    $db = new Database();
-    $conn = $db->connect();
-    $controller = new TeamController($conn);
+    // Get form data
+    $reportId = $_POST['report_id'];
+    $timeStarted = $_POST['timeStarted'];
     
-    // Set the action to assign if not already set
-    if (!isset($_POST['action'])) {
-        $_POST['action'] = 'assign';
-    }
+    // Format the time_started as a datetime
+    $timeStarted = date('Y-m-d') . ' ' . $timeStarted . ':00';
     
-    // Handle the request
-    $controller->handleRequest();
-}
-
-if (isset($_POST['update_team_submit'])) {
-    // Create controller instance
-    $db = new Database();
-    $conn = $db->connect();
-    $controller = new TeamController($conn);
+    // Check which teams were selected
+    $selectedTeams = [];
     
-    // Set the action to update if not already set
-    if (!isset($_POST['action'])) {
-        $_POST['action'] = 'update';
-    }
-    
-    // Handle the request
-    $controller->handleRequest();
-}
-
-class TeamController {
-    private $model;
-    private $message = "";
-
-    public function __construct($conn = null) {
-        if ($conn === null) {
-            // Create database connection if not provided
-            $db = new Database();
-            $conn = $db->connect();
-        }
-        
-        // Create model with connection
-        $this->model = new TeamModel($conn);
-    }
-    
-    public function getMessage() {
-        return $this->message;
-    }
-    
-    public function handleRequest() {
-        $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
-
-        switch($action) {
-            case 'assign':
-                $this->assignTeam();
-                break;
-            case 'update':
-                $this->updateTeamAssignment();
-                break;
-            default:
-                // Default action or view all team assignments
-                return $this->model->getAllTeamAssignments();
+    if (isset($_POST['medical'])) {
+        $medicalTeam = $team->getTeamByName('medical');
+        if ($medicalTeam) {
+            $selectedTeams[] = $medicalTeam['id'];
         }
     }
     
-    private function assignTeam() {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Get form data
-            $reportId = $_POST['report_id'];
-            $timeStarted = $_POST['timeStarted'];
-            $assignedTeam = ucwords($_POST['assignedTeam']);
-            
-            // Don't pass the disaster type to the model
-            if ($this->model->assignTeam($reportId, $timeStarted, $assignedTeam)) {
-                $this->message = "Team assigned successfully";
-                header("Location: ../views/admin/main_admin.php");
-                exit();
-            } else {
-                $this->message = "Error assigning team";
-            }
+    if (isset($_POST['rescue'])) {
+        $rescueTeam = $team->getTeamByName('rescue');
+        if ($rescueTeam) {
+            $selectedTeams[] = $rescueTeam['id'];
         }
     }
     
-    private function updateTeamAssignment() {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Get data from form
-            $reportId = $_POST['report_id'];
-            $timeStarted = $_POST['timeStarted'];
-            $assignedTeam = ucwords($_POST['assignedTeam']);
-            
-            // Don't pass the disaster type to the model
-            if ($this->model->updateTeamAssignment($reportId, $timeStarted, $assignedTeam)) {
-                $this->message = "Team assignment updated successfully";
-                header("Location: ../views/admin/main_admin.php");
-                exit();
-            } else {
-                $this->message = "Error updating team assignment";
-            }
+    if (isset($_POST['logistics'])) {
+        $logisticsTeam = $team->getTeamByName('logistics');
+        if ($logisticsTeam) {
+            $selectedTeams[] = $logisticsTeam['id'];
         }
     }
     
-    public function getTeamAssignment($reportId) {
-        return $this->model->getTeamAssignment($reportId);
+    if (isset($_POST['fire'])) {
+        $fireTeam = $team->getTeamByName('fire');
+        if ($fireTeam) {
+            $selectedTeams[] = $fireTeam['id'];
+        }
+    }
+    
+    // Create assignments for each selected team
+    $success = true;
+    foreach ($selectedTeams as $teamId) {
+        $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
+        if (!$result) {
+            $success = false;
+        }
+    }
+    
+    if ($success && !empty($selectedTeams)) {
+        // Redirect with success message
+        header("Location: ../views/admin/main_admin.php?success=assigned");
+        exit();
+    } else {
+        // Redirect with error message
+        header("Location: ../views/admin/main_admin.php?error=assignment_failed&report_id=" . $reportId);
+        exit();
     }
 }
 ?>
-

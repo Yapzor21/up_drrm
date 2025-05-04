@@ -16,7 +16,7 @@
       <p>Join our team and make a difference</p>
     </div>
     
-    <form action="../../controllers/super_admin.php" method="post">
+  <form action="../../controllers/super_admin.php" method="post">
   <div class="form-row">
     <div class="form-group">
       <label for="fname">First Name</label>
@@ -58,6 +58,7 @@
           Admin
         </label>
       </div>
+
       <div class="role-option">
         <input type="radio" id="volunteer" name="role" value="volunteer">
         <label for="volunteer">
@@ -66,7 +67,7 @@
         </label>
       </div>
 
-      <div class="form-group" id="volunteer-dropdown" style="display: none;">
+  <div class="form-group" id="volunteer-dropdown" style="display: none;">
   <label for="volunteerType">Select Volunteer Type</label>
   <select id="volunteerType" name="volunteerType">
     <option value="">-- Select Type --</option>
