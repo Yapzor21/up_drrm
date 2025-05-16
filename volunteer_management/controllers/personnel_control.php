@@ -22,6 +22,19 @@ class PersonnelController {
     public function getAllPersonnel() {
         return $this->personnel->getAllPersonnel();
     }
+    
+    // Add this method to load personnel by status for the main admin page
+    public function loadPersonnelForAdminPage() {
+        $deployed = $this->getPersonnelByStatus('deployed');
+        $standby = $this->getPersonnelByStatus('standby');
+        $oncall = $this->getPersonnelByStatus('oncall');
+        
+        return [
+            'deployed' => $deployed,
+            'standby' => $standby,
+            'oncall' => $oncall
+        ];
+    }
 }
 
 // Handle AJAX requests
@@ -60,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $personnel = $controller->getAllPersonnel();
             
             echo json_encode($personnel);
+        } elseif ($action === 'loadForAdmin') {
+            $data = $controller->loadPersonnelForAdminPage();
+            
+            echo json_encode($data);
         }
     }
 }

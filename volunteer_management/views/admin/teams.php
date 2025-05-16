@@ -137,11 +137,14 @@ $teamVolunteers = $controller->getVolunteersByTeam();
     </style>
 </head>
 <body>
+
+
     <div class="form-container">
         <div class="form-header">
             <h2>Volunteer Teams</h2>
            
         </div>
+        <a href="../../controllers/logout1.php">Logout</a>
         <!--
         
          <a href="teams.php" class="back-button">← Back to Teams</a>
@@ -157,10 +160,10 @@ $teamVolunteers = $controller->getVolunteersByTeam();
                         <th>Team <span class="sort-icon">↕</span></th>
                         <th>First Name <span class="sort-icon">↕</span></th>
                         <th>Last Name <span class="sort-icon">↕</span></th>
-                        <th>Admin Id <span class="sort-icon">↕</span></th>
+                        <th>Id <span class="sort-icon">↕</span></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody> 
                     <?php 
                     // Flatten the team structure to display in a single table
                     $allVolunteers = [];

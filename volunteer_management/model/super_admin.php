@@ -35,7 +35,7 @@ class Employee{
             $stmt = $this->pdo->query("
                 SELECT e.admin_id, e.first_name, e.middle_name, e.last_name, t.name AS team_name
                 FROM employee e
-                LEFT JOIN team t ON e.team_id = t.id
+                JOIN team t ON e.team_id = t.id
                 WHERE e.role = 'volunteer'
                 ORDER BY t.name, e.last_name
             ");

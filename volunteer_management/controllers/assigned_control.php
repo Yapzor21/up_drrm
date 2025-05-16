@@ -3,7 +3,6 @@ require_once __DIR__ . '/../model/assigned.php';
 require_once __DIR__ . '/../model/teams.php';
 require_once __DIR__ . '/../config/database.php';
 
-
 $database = new Database();
 $db = $database->connect();
 
@@ -53,15 +52,18 @@ if (isset($_POST['assign_submit'])) {
     // Create assignments for each selected team
     $success = true;
     foreach ($selectedTeams as $teamId) {
-        $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
-        if (!$result) {
-            $success = false;
+        // Check if this team is already assigned to this report
+        if (!$assignment->isTeamAssignedToReport($reportId, $teamId)) {
+            $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
+            if (!$result) {
+                $success = false;
+            }
         }
     }
     
     if ($success && !empty($selectedTeams)) {
-        // Redirect with success message
-        header("Location: ../views/admin/main_admin.php?success=assigned");
+        // Redirect with success message AND report_id
+        header("Location: ../views/admin/main_admin.php?success=assigned&report_id=" . $reportId);
         exit();
     } else {
         // Redirect with error message

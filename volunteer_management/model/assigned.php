@@ -41,6 +41,55 @@ class Assignment {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAssignmentDetailsForReport($reportId) {
+        $query = "SELECT ur.Disaster_Type, ur.Location, ur.City, 
+                         GROUP_CONCAT(DISTINCT t.name ORDER BY t.name SEPARATOR ', ') as team_names, 
+                         MIN(a.time_started) as time_started, 
+                         MAX(a.date_assigned) as date_assigned
+                  FROM " . $this->table . " a 
+                  JOIN user_report ur ON a.report_id = ur.Report_Id
+                  JOIN team t ON a.team_id = t.id 
+                  WHERE a.report_id = :reportId
+                  GROUP BY ur.Disaster_Type, ur.Location, ur.City";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':reportId', $reportId);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllAssignments() {
+        $query = "SELECT a.report_id, ur.Disaster_Type, ur.Location, ur.City, 
+                         GROUP_CONCAT(DISTINCT t.name ORDER BY t.name SEPARATOR ', ') as team_names,
+                         MIN(a.time_started) as time_started, 
+                         MAX(a.date_assigned) as date_assigned
+                  FROM " . $this->table . " a 
+                  JOIN user_report ur ON a.report_id = ur.Report_Id
+                  JOIN team t ON a.team_id = t.id 
+                  GROUP BY a.report_id, ur.Disaster_Type, ur.Location, ur.City
+                  ORDER BY MAX(a.date_assigned) DESC";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Add this method to check if a team is already assigned to a report
+    public function isTeamAssignedToReport($reportId, $teamId) {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " 
+                  WHERE report_id = :reportId AND team_id = :teamId";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':reportId', $reportId);
+        $stmt->bindParam(':teamId', $teamId);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] > 0;
+    }
+
     public function deleteAssignment($assignmentId) {
         $query = "DELETE FROM " . $this->table . " WHERE assignment_id = :assignmentId";
         

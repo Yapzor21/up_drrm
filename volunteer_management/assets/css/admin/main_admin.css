@@ -500,6 +500,7 @@ tables
 */
 /* contacts */
 .wrapper {
+
     display: flex;
     
 }

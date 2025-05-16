@@ -8,7 +8,7 @@ class Personnel {
     }
     
     public function getPersonnelByStatus($status) {
-        $query = "SELECT * FROM personnel WHERE status = ? ORDER BY name";
+        $query = "SELECT * FROM employee WHERE status = ? ORDER BY first_name";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $status, PDO::PARAM_STR);
         $stmt->execute();
@@ -22,7 +22,7 @@ class Personnel {
     }
     
     public function updateStatus($id, $status) {
-        $query = "UPDATE personnel SET status = ? WHERE id = ?";
+        $query = "UPDATE employee SET status = ? WHERE admin_id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $status, PDO::PARAM_STR);
         $stmt->bindParam(2, $id, PDO::PARAM_INT);
@@ -35,7 +35,7 @@ class Personnel {
     }
     
     public function getAllPersonnel() {
-        $query = "SELECT * FROM personnel ORDER BY name";
+        $query = "SELECT * FROM employee ORDER BY first_name";
         $stmt = $this->conn->query($query);
         
         $personnel = [];
