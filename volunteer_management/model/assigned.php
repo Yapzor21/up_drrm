@@ -76,7 +76,6 @@ class Assignment {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Add this method to check if a team is already assigned to a report
     public function isTeamAssignedToReport($reportId, $teamId) {
         $query = "SELECT COUNT(*) as count FROM " . $this->table . " 
                   WHERE report_id = :reportId AND team_id = :teamId";
@@ -97,6 +96,57 @@ class Assignment {
         $stmt->bindParam(':assignmentId', $assignmentId);
         
         return $stmt->execute();
+    }
+    
+    // New method for updating team assignments
+    public function updateAssignments($reportId, $selectedTeams, $timeStarted) {
+        try {
+            // Start transaction
+            $this->conn->beginTransaction();
+            
+            // Get current assignments
+            $currentAssignments = $this->getAssignmentsByReportId($reportId);
+            $currentTeamIds = array_column($currentAssignments, 'team_id');
+            
+            // Teams to remove (in current but not in selected)
+            $teamsToRemove = array_diff($currentTeamIds, $selectedTeams);
+            
+            // Teams to add (in selected but not in current)
+            $teamsToAdd = array_diff($selectedTeams, $currentTeamIds);
+            
+            // Remove teams no longer selected
+            foreach ($currentAssignments as $assignment) {
+                if (in_array($assignment['team_id'], $teamsToRemove)) {
+                    $this->deleteAssignment($assignment['assignment_id']);
+                }
+            }
+            
+            // Add newly selected teams
+            foreach ($teamsToAdd as $teamId) {
+                $this->createAssignment($reportId, $teamId, $timeStarted);
+            }
+            
+            // Update time_started for existing assignments that remain
+            if (!empty(array_intersect($currentTeamIds, $selectedTeams))) {
+                $query = "UPDATE " . $this->table . " 
+                          SET time_started = :timeStarted 
+                          WHERE report_id = :reportId 
+                          AND team_id IN (" . implode(',', array_intersect($currentTeamIds, $selectedTeams)) . ")";
+                
+                $stmt = $this->conn->prepare($query);
+                $stmt->bindParam(':timeStarted', $timeStarted);
+                $stmt->bindParam(':reportId', $reportId);
+                $stmt->execute();
+            }
+            
+            // Commit transaction
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->conn->rollBack();
+            return false;
+        }
     }
 }
 ?>

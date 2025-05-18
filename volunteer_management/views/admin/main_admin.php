@@ -10,14 +10,9 @@ require_once '../../config/database.php';
 $personnelController = new PersonnelController();
 $reportController = new UserReportController(null);
 
-// Get personnel by status using the controller
-$deployed = $personnelController->getPersonnelByStatus('deployed');
-$standby = $personnelController->getPersonnelByStatus('standby');
-$oncall = $personnelController->getPersonnelByStatus('oncall');
 
 // Get all reports based on user actions
 $result = $reportController->handleRequest();
-$message = $reportController->getMessage();
 
 // Initialize database connection
 $database = new Database();
@@ -28,33 +23,21 @@ $assignment = new Assignment($db);
 // Initialize team model
 $teamModel = new Team($db);
 // Fetch all teams
-$teams = $teamModel->getAllTeams();
+
 
 $reportIdForAssignment = isset($_GET['report_id']) ? $_GET['report_id'] : '';
 $showAssignModal = isset($_GET['assign']) && $_GET['assign'] == 'true';
-// Get report ID from URL
 $reportId = isset($_GET['report_id']) ? $_GET['report_id'] : null;
-
-// Get assignment details for the specific report (if one is selected)
 $assignmentDetails = $reportId ? $assignment->getAssignmentDetailsForReport($reportId) : [];
 
 // Get ALL assignments for ALL reports
 $allAssignments = $assignment->getAllAssignments();
+$teams = $teamModel->getAllTeams();
+// Get personnel by status using the controller
+$deployed = $personnelController->getPersonnelByStatus('deployed');
+$standby = $personnelController->getPersonnelByStatus('standby');
+$oncall = $personnelController->getPersonnelByStatus('oncall');
 
-// Display notifications
-$notification = '';
-$notificationType = '';
-
-if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
-    $notification = 'Teams successfully assigned to the report.';
-    $notificationType = 'success';
-} else if (isset($_GET['info']) && $_GET['info'] == 'already_assigned') {
-    $notification = 'All selected teams were already assigned to this report.';
-    $notificationType = 'info';
-} else if (isset($_GET['error']) && $_GET['error'] == 'assignment_failed') {
-    $notification = 'Failed to assign teams to the report.';
-    $notificationType = 'error';
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,41 +53,41 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
     
 </head>
 <body>
-    <div id="overlay"></div>
-    
-    <!-- Sidebar -->
-    <div id="sidebar" onclick="stopPropagation()">
+   <div id="overlay" id="overlay"></div>
+    <div id="sidebar" id="sidebar" onclick="stopPropagation()">
         <div class="close">  
             <button class="sidebar-close" onclick="toggleSidebar()">×</button>
         </div>   
         <div class="menu">
-            <nav>
-                <ul>
-                    <ol><a href="main_dashboard.php">Dashboard</a></ol>
-                    <ol><a href="volunteer_dispatchment.php">Dispatch</a></ol>
-                    <ol><a href="#">Admin</a></ol>
-                </ul>
-            </nav>
+        <nav id="nav-menu">
+            <ul>
+                 <ol><a href="main_dashboard.php">Dashboard</a></ol>
+                 <ol><a href="#">Admin</a></ol>
+                 <ol><a href="teams.php">Teams</a></ol>
+                 <ol><a href="../../controllers/logout1.php">Logout</a></ol>
+            </ul>
+        </nav>
         </div>
-        <button onclick="openModal('reportModal')">REPORT</button>
+        <button id="report-btn"  onclick="openModal('reportModal')">REPORT</button>
     </div>
+
+
 
     <!-- Header -->
     <header id="top-header">
-        <div class="logos">
-            <a href="#" id="drrm-logo">
-                <img src="../../assets/images/Group 2829.png" alt="">
-            </a>
-            <a href="#" id="govph-logo">
-                <img src="../../assets/images/Frame 3 (1).svg" alt="">
-            </a>
+       <div class="logos">
+        <a href="#" id="drrm-logo">
+            <img src="../../assets/images/Group 2829.png" alt="">
+        </a>
+        <a href="#" id="govph-logo">
+            <img src="../../assets/images/Frame 3 (1).svg" alt="">
+        </a>
         </div>
         <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
         <nav id="nav-menu">
-            <a href="community_dashboard.php">Dashboard</a>
-            <a href="../views/user/community_report.php">Account</a>
-            <a href="../views/admin/main_admin.php">Admin</a>
-            <ol><a href="community.php">About us</a></ol>
+            <a href="main_dashboard.php">Dashboard</a>
+            <a href="#">Admin</a>
+            <a href="teams.php">Teams</a>
             <a href="../../controllers/logout1.php">Logout</a>
         </nav>
     </header>
@@ -124,30 +107,30 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
     </div>
     
     <!-- Create Alert Modal -->
-    <div class="modal" id="reportModal">
-        <div class="modal-content" onclick="stopPropagation()">
-            <button class="close-button" onclick="closeModal('reportModal')">×</button>
-            <h3>Create Alert</h3>
-            <form id="reportForm" method="POST" action="../../controllers/sms_control.php">
-                <div class="form-group">
-                    <label for="disasterType">Disaster Type</label>
-                    <input type="text" id="disasterType" name="disasterType" required>
-                </div>
-                <div class="form-group">
-                    <label for="location">Exact Location</label>
-                    <input type="text" id="location" name="location" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description of Disaster</label>
-                    <textarea id="description" name="description" required></textarea>
-                </div>
-                <div class="alert-info">
-                    <p><strong>Note:</strong> This alert will be sent via SMS to all registered contact numbers.</p>
-                </div>
-                <button type="submit" name="create_alert" class="submit-button">Create & Send Alert</button>
-            </form>
-        </div>
+<div class="modal" id="reportModal">
+    <div class="modal-content" onclick="stopPropagation()">
+        <button class="close-button" onclick="closeModal('reportModal')">×</button>
+        <h3>Create Alert</h3>
+        <form id="reportForm" method="POST" action="../../controllers/sms_control.php">
+            <div class="form-group">
+                <label for="disasterType">Disaster Type</label>
+                <input type="text" id="disasterType" name="disasterType" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Exact Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description of Disaster</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <div class="alert-info">
+                <p><strong>Note:</strong> This alert will be sent via SMS to all registered contact numbers.</p>
+            </div>
+            <button type="submit" name="create_alert" class="submit-button">Send Alert</button>
+        </form>
     </div>
+</div>
 
     <!-- Assign Team Modal -->
     <div class="modal" id="assignModal" <?php echo $showAssignModal ? 'style="display: flex;"' : ''; ?>>
@@ -160,19 +143,19 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                     <label for="timeStarted">Time Started</label>
                     <input type="time" id="timeStarted" name="timeStarted" required>
                 </div>
-                <div class="form-group">
-                    <label>Select Teams to Assign</label>
-                    <?php if ($teams && is_array($teams)): ?>
-                        <?php foreach ($teams as $teamItem): ?>
-                        <div class="checkbox-item">
-                            <input type="checkbox" name="<?php echo strtolower($teamItem['name']); ?>" id="team_<?php echo $teamItem['id']; ?>">
-                            <label for="team_<?php echo $teamItem['id']; ?>"><?php echo ucfirst($teamItem['name']); ?></label>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No teams available</p>
-                    <?php endif; ?>
-                </div>
+         <div class="form-group">
+    <label>Select Teams to Assign</label>
+    <?php if ($teams && is_array($teams)): ?>
+        <?php foreach ($teams as $teamItem): ?>
+        <div class="checkbox-item">
+            <input type="checkbox" name="<?php echo strtolower($teamItem['name']); ?>" id="team_<?php echo $teamItem['id']; ?>">
+            <label for="team_<?php echo $teamItem['id']; ?>"><?php echo ucfirst($teamItem['name']); ?></label>
+        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No teams available</p>
+    <?php endif; ?>
+</div>
                 <div class="confirm">
                     <button type="submit" name="assign_submit" class="submit-button">Assign Team</button>
                     <button type="button" onclick="closeModal('assignModal')" class="cancel-button">Cancel</button>
@@ -197,36 +180,41 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
         </div>
     </div>
 
-    <!-- Update assigned team Modal -->
+     <!-- Update assigned team Modal -->
     <div id="updateTeamModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('updateTeamModal')">&times;</span>
             <h3>Update Team Assignment</h3>
-            <form method="post" action="">
+            <form method="post" action="../../controllers/assigned_control.php">
                 <input type="hidden" id="update_team_id" name="report_id">
-                <div class="form-group">
-                    <label for="updateDisasterType">Disaster Type</label>
-                    <input type="text" id="updateDisasterType" name="disasterType" disabled>
-                </div>
+            
                 <div class="form-group">
                     <label for="updateTimeStarted">Time Started</label>
                     <input type="time" id="updateTimeStarted" name="timeStarted" required>
                 </div>
+            
                 <div class="form-group">
-                    <label for="updateAssignedTeam">Assigned Team</label>
-                    <input type="text" id="updateAssignedTeam" name="assignedTeam" required>
+                    <label>Select Teams to Assign</label>
+                    <?php if ($teams && is_array($teams)): ?>
+                        <?php foreach ($teams as $teamItem): ?>
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="<?php echo strtolower($teamItem['name']); ?>" id="update_team_<?php echo $teamItem['id']; ?>" class="update-team-checkbox">
+                            <label for="update_team_<?php echo $teamItem['id']; ?>"><?php echo ucfirst($teamItem['name']); ?></label>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No teams available</p>
+                    <?php endif; ?>
                 </div>
-                <div class="form-group">
-                    <label for="updateAffectedAreas">Affected Areas</label>
-                    <input type="text" id="updateAffectedAreas" name="affectedAreas" required>
-                </div>
+
                 <div class="confirm">
-                    <button type="submit" name="update_team_submit" class="submit-button">Update Assignment</button>
-                    <button type="button" onclick="closeModal('updateTeamModal')">Cancel</button>
+                    <button type="submit" name="assign_submit" class="submit-button">Update Assignment</button>
+                    <button type="button" onclick="closeModal('updateTeamModal')" class="cancel-button">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
+
 
     <!-- Update report Modal -->
     <div id="updateModal" class="modal">
@@ -309,8 +297,8 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                                 echo "<td>" . $row["Date_Reported"] . "</td>";
                                 echo "<td>
                                     <i class='fas fa-user-plus assign-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "' title='Assign'></i>
-                                    <i class='fas fa-edit edit-btn' style='cursor:pointer; margin: 0 8px;' data-id='" . $row["Report_Id"] . "'></i>
-                                    <i class='fas fa-trash delete-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "'></i>
+                                    <i class='fas fa-edit edit-btn' style='cursor:pointer; margin: 0 8px;' data-id='" . $row["Report_Id"] . "' title='Update'></i>
+                                    <i class='fas fa-trash delete-btn' style='cursor:pointer;' data-id='" . $row["Report_Id"] . "' title='Delete'></i>
                                 </td>";
                                 echo "</tr>";
                             }
@@ -321,11 +309,12 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                     </tbody>
                 </table>
             </div>
-
-            <!-- Assignment Details Section -->
+            
+             <!-- Assignment Details Section -->
             <?php if ($reportId): ?>
             <div class="table-container">
-                <h2>Assignment Details for Report #<?php echo htmlspecialchars($reportId); ?></h2>
+            
+                 <div class="title-header"><h3> Assignment Details for report #<?php echo htmlspecialchars($reportId); ?> </h3></div>
                 <?php if (!empty($assignmentDetails)): ?>
                     <table>
                         <thead>
@@ -336,6 +325,7 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                                 <th>Assigned Teams</th>
                                 <th>Time Started</th>
                                 <th>Date Assigned</th>
+                                <th>Operation</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -347,6 +337,11 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                                 <td><?php echo htmlspecialchars($detail['team_names']); ?></td>
                                 <td><?php echo htmlspecialchars(date('h:i A', strtotime($detail['time_started']))); ?></td>
                                 <td><?php echo htmlspecialchars(date('M d, Y', strtotime($detail['date_assigned']))); ?></td>
+                                <td>
+                                    <button class="update-team-btn"  title="Update Assignment" data-id=" <?php echo htmlspecialchars($reportId); ?>">
+                                        <i class="fas fa-edit"></i> Update
+                                    </button>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -358,8 +353,14 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
             <?php endif; ?>
 
             <!-- All Team Assignments Section -->
-            <div class="container">
-                <h2>All Team Assignments</h2>
+            <div class="table-container">
+                <div class="search-container">
+                    <div class="title-header"><h3>assigned team</h3></div>
+                 <div class="const">
+                        <input type="text" id="searchInput" placeholder="Search reports..." autocomplete="off">
+                        <button id="searchButton">Search</button>
+                    </div>
+                </div>
                 <?php if (!empty($allAssignments)): ?>
                     <table>
                         <thead>
@@ -392,42 +393,15 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
                 <?php endif; ?>
             </div>
 
-            <!-- Responses Table -->
-            <div class="table-container">
-                <div class="search-container">
-                    <div class="title-header"><h3>Responses</h3></div>
-                    <div class="const">
-                        <input type="text" id="searchInput" placeholder="Search responses...">
-                        <button id="searchButton">Search</button>
-                    </div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Skillset</th>
-                            <th>Response</th>
-                        </tr>
-                    </thead>
-                    <tbody id="personnel-table">
-                        <tr>
-                            <td>Jobert Pedro</td>
-                            <td>09770757048</td>
-                            <td>Medical, First Aid</td>
-                            <td>Yes</td>
-                        </tr>
-                    </tbody>
-                </table>
+            
                 <div class="print_report">
                     <form method="POST" action="../../controllers/pdf.php">
                         <button class="print_report_bts" type="submit">Print Report</button>
                     </form>
                 </div>
-            </div>
         </div>
 
-       <!-- Personnel Sidebar -->
+<!-- Personnel Sidebar -->
 <div class="personnel-sidebar">
     <div class="personnel">
         <h6>Personnel</h6> 
@@ -477,7 +451,6 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
             <li class="personnel-item" data-id="<?php echo $person['admin_id']; ?>" data-status="oncall">
                 <span class="status-indicator oncall"></span>
                 <span><?php echo $person['first_name'] . ' ' . $person['middle_name'][0] . '. ' . $person['last_name']; ?></span>
-                <span class="phone-icon">📞</span>
                 <div class="actions">⋮</div>
                 <div class="status-dropdown">
                     <div class="status-option" data-status="deployed">Deployed</div>
@@ -501,6 +474,7 @@ if (isset($_GET['success']) && $_GET['success'] == 'assigned') {
     <script src="../../assets/js/assigned.js"></script>
     <script src="../../assets/js/header.js"></script>
     <script src="../../assets/js/ajax.js"></script>
-    <script src="../../assets/js/report_ajax.js"></script>
+    <script src="../../assets/js/teamassigned.js"></script>
+
 </body>
 </html>

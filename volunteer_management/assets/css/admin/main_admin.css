@@ -291,9 +291,26 @@ body{
     overflow-y: auto; /* Add scrolling to the modal content */
 }
 
+.checkbox-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox-item label {
+    order: -1; /* This ensures the label comes before the checkbox */
+    margin-right: 10px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    margin-left: auto; /* Pushes the checkbox to the right */
+    padding: 10px;
+}
 /* Make form elements more compact */
 .form-group {
     margin-bottom: 15px;
+    
 }
 
 .form-group label {
@@ -318,6 +335,9 @@ body{
     height: 80px; /* Reduced height */
     resize: vertical;
 }
+
+/* team update*/
+
 
 /* Keep other styles the same */
 .close-button {
@@ -345,6 +365,18 @@ body{
 .submit-button {
     width: 100%;
     padding: 10px; /* Slightly reduced padding */
+    background-color: #00cc00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.cancel-button {
+    width: 100%;
+    padding: 10px; /* Slightly reduced padding */
     background-color: #FF0000;
     color: white;
     border: none;
@@ -354,9 +386,7 @@ body{
     transition: background-color 0.2s;
 }
 
-.submit-button:hover {
-    background-color: #D00000;
-}
+
 
 
 
@@ -572,14 +602,16 @@ tables
     background-color: #ffcc00;
 }
 
-.on-call {
-    color: #ff0000;
+.oncall {
+    background-color: #ff0000;
 }
 
-.phone-icon {
-    margin-left: auto;
+
+
+.phone {
     cursor: pointer;
     color: #ff0000;
+    margin-right: 10px;
 }
 
 .table-container {
@@ -604,6 +636,7 @@ th {
     background-color: #0099ff;
     color: white;
 }
+
 
 .button-containers {
     display: grid;
@@ -726,21 +759,6 @@ th {
     resize: vertical;
 }
 
-.submit-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #FF0000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s;
-}
-
-.submit-button:hover {
-    background-color: #D00000;
-}
 
 @media screen and (max-width: 1024px) {
     .wrapper{
@@ -879,15 +897,16 @@ th {
         background-color: #FF0000;
     }
 
+    
     /* action -- delete & update sa table */
 
     .edit-btn,
     .delete-btn,
     .assign-btn {
-        padding: 8px;
+        padding: 5px;
         border: none;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 10px;
         border-radius: 4px;
     }
     .assign-btn {
@@ -905,7 +924,17 @@ th {
         color: white;
     }
 
-    .search-container {
+    .update-team-btn{
+        background-color: #00cc00;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        border-radius: 4px;
+    }
+
+   .search-container {
         display: flex;
         margin-bottom: 10px;
         gap: 5px;
@@ -1028,6 +1057,7 @@ th {
     .personnel-item .actions {
         margin-left: auto;
         cursor: pointer;
+        font-size: 25px;
     }
     
     .toast {
@@ -1042,19 +1072,119 @@ th {
         z-index: 1000;
     }
 
-   
-  /* report table hyperlink report_id and disaster_type*/
-  
-/* Make the report_id and disaster_type cells look clickable */
-.table-container:first-of-type table tbody tr td:nth-child(1),
-.table-container:first-of-type table tbody tr td:nth-child(2) {
-    cursor: pointer;
-    color: #0066cc;
-    text-decoration: underline;
-}
+    .toast.show {
+        display: block;
+        animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+    }
 
-.table-container:first-of-type table tbody tr td:nth-child(1):hover,
-.table-container:first-of-type table tbody tr td:nth-child(2):hover {
-    color: #004080;
-}
+    
+     :root {
+            --primary-color: #4a6fdc;
+            --primary-hover: #3a5fc9;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-color: #333;
+            --text-secondary: #6c757d;
+            --shadow: 0 2px 10px rgba(0,0,0,0.05);
+            --header-bg: #0099ff;
+            --header-text: white;
+            --row-even: #f8f9fa;
+            --row-odd: white;
+        }
+        
+        .form-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .form-header h2 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+        
+        .form-header p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        
+        .back-button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .volunteer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        
+        .volunteer-table th {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            border: 1px solid #ccc;
+        }
+        
+        .volunteer-table td {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+        }
+        
+        .volunteer-table tr:nth-child(even) {
+            background-color: var(--row-even);
+        }
+        
+        .volunteer-table tr:nth-child(odd) {
+            background-color: var(--row-odd);
+        }
 
+        .team-section {
+            margin-bottom: 20px;
+        }
+        
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+        
+        .no-volunteers {
+            padding: 20px;
+            text-align: center;
+            font-style: italic;
+            color: var(--text-secondary);
+            background-color: var(--light-bg);
+            border-radius: 6px;
+        }
+        
+        @media (max-width: 768px) {
+            .volunteer-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .form-container {
+                margin: 15px;
+                padding: 15px;
+            }
+        }
+
+        .volunteer h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }

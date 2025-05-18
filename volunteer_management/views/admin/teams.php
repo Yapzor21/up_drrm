@@ -14,185 +14,111 @@ $teamVolunteers = $controller->getVolunteersByTeam();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volunteer Teams</title>
-    <link rel="stylesheet" href="../../assets/css/admin/super_admin_dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/admin/main_admin.css">
     <link rel="icon" type="image/svg+xml" href="../../assets/images/iconLogo1.svg">
-    <style>
-        :root {
-            --primary-color: #4a6fdc;
-            --primary-hover: #3a5fc9;
-            --light-bg: #f8f9fa;
-            --border-color: #e9ecef;
-            --text-color: #333;
-            --text-secondary: #6c757d;
-            --shadow: 0 2px 10px rgba(0,0,0,0.05);
-            --header-bg: #0099ff;
-            --header-text: white;
-            --row-even: #f8f9fa;
-            --row-odd: white;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-color);
-            background-color: #f5f7fa;
-        }
-        
-        .form-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-        }
-        
-        .form-header {
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-        
-        .form-header h2 {
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-            font-size: 24px;
-        }
-        
-        .form-header p {
-            margin: 0;
-            color: var(--text-secondary);
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 25px;
-            padding: 8px 16px;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        
-        .back-button:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .volunteer-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-        }
-        
-        .volunteer-table th {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            text-align: left;
-            padding: 12px 15px;
-            font-weight: 600;
-            border: 1px solid #ccc;
-        }
-        
-        .volunteer-table td {
-            padding: 12px 15px;
-            border: 1px solid #ccc;
-        }
-        
-        .volunteer-table tr:nth-child(even) {
-            background-color: var(--row-even);
-        }
-        
-        .volunteer-table tr:nth-child(odd) {
-            background-color: var(--row-odd);
-        }
-        
-        .sort-icon {
-            margin-left: 5px;
-            font-size: 0.8em;
-        }
-        
-        .no-volunteers {
-            padding: 20px;
-            text-align: center;
-            font-style: italic;
-            color: var(--text-secondary);
-            background-color: var(--light-bg);
-            border-radius: 6px;
-        }
-        
-        @media (max-width: 768px) {
-            .volunteer-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .form-container {
-                margin: 15px;
-                padding: 15px;
-            }
-        }
-    </style>
 </head>
 <body>
 
-
-    <div class="form-container">
-        <div class="form-header">
-            <h2>Volunteer Teams</h2>
-           
+<div id="overlay" id="overlay"></div>
+    <div id="sidebar" id="sidebar" onclick="stopPropagation()">
+        <div class="close">  
+            <button class="sidebar-close" onclick="toggleSidebar()">×</button>
+        </div>   
+        <div class="menu">
+        <nav id="nav-menu">
+            <ul>
+                 <ol><a href="main_dashboard.php">Dashboard</a></ol>
+                 <ol><a href="#">Admin</a></ol>
+                 <ol><a href="teams.php">Teams</a></ol>
+                 <ol><a href="../../controllers/logout1.php">Logout</a></ol>
+            </ul>
+        </nav>
         </div>
-        <a href="../../controllers/logout1.php">Logout</a>
-        <!--
-        
-         <a href="teams.php" class="back-button">← Back to Teams</a>
-        
-        -->
-       
-        <?php if (empty($teamVolunteers)): ?>
-            <div class="no-volunteers">No volunteers have been assigned to teams yet.</div>
-        <?php else: ?>
-            <table class="volunteer-table">
-                <thead>
-                    <tr>
-                        <th>Team <span class="sort-icon">↕</span></th>
-                        <th>First Name <span class="sort-icon">↕</span></th>
-                        <th>Last Name <span class="sort-icon">↕</span></th>
-                        <th>Id <span class="sort-icon">↕</span></th>
-                    </tr>
-                </thead>
-                <tbody> 
-                    <?php 
-                    // Flatten the team structure to display in a single table
-                    $allVolunteers = [];
-                    foreach ($teamVolunteers as $teamName => $teamMembers) {
-                        foreach ($teamMembers as $volunteer) {
-                            $volunteer['team_name'] = $teamName;
-                            $allVolunteers[] = $volunteer;
-                        }
-                    }
-                    
-                    // If no volunteers, display an empty row
-                    if (empty($allVolunteers)): 
-                    ?>
-                        <tr>
-                            <td colspan="4" class="no-volunteers">No volunteers have been assigned to teams yet.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($allVolunteers as $volunteer): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($volunteer['team_name']); ?></td>
-                                <td><?php echo htmlspecialchars($volunteer['first_name']); ?></td>
-                                <td><?php echo htmlspecialchars($volunteer['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($volunteer['admin_id']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
+        <button id="report-btn"  onclick="openModal('reportModal')">REPORT</button>
     </div>
+
+
+
+    <!-- Header -->
+    <header id="top-header">
+       <div class="logos">
+        <a href="#" id="drrm-logo">
+            <img src="../../assets/images/Group 2829.png" alt="">
+        </a>
+        <a href="#" id="govph-logo">
+            <img src="../../assets/images/Frame 3 (1).svg" alt="">
+        </a>
+        </div>
+        <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <nav id="nav-menu">
+            <a href="main_dashboard.php">Dashboard</a>
+            <a href="#">Admin</a>
+            <a href="teams.php">Teams</a>
+            <a href="../../controllers/logout1.php">Logout</a>
+        </nav>
+    </header>
+    
+    <div id="sub-header">
+        <div id="drrm-logor">
+            <img src="../../assets/images/Frame 1 (1).svg" alt="">
+        </div>
+        <div id="right-section">
+            <div id="time-box">
+                <div id="time-label">Philippine Standard Time</div>
+                <div id="ph-time" class="time"></div>
+                <div id="ph-date" class="date"></div>
+            </div>
+        </div>
+    </div>
+
+<div class="form-container">
+    <div class="form-header">
+        <div class="volunteer"><h2>Volunteer Teams</h2></div>
+    </div>
+    <?php if (empty($teamVolunteers)): ?>
+        <div class="no-volunteers">No volunteers have been assigned to teams yet.</div>
+    <?php else: ?>
+        <?php 
+        // Iterate through each team and create a separate table
+        foreach ($teamVolunteers as $teamName => $teamMembers): 
+        ?>
+            <div class="team-section">
+                <div class="search-container">
+                    <div class="title-header"><h3><?php echo ucwords($teamName); ?> Team</h3></div>
+                    <div class="const">
+                        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+                        <button id="searchButton">Search</button>
+                    </div>
+                </div>
+                <?php if (empty($teamMembers)): ?>
+                    <div class="no-volunteers">No volunteers have been assigned to this team yet.</div>
+                <?php else: ?>
+                    <table class="volunteer-table">
+                        <thead>
+                            <tr>
+                                <th>First Name <span class="sort-icon">↕</span></th>
+                                <th>Last Name <span class="sort-icon">↕</span></th>
+                                <th>Id <span class="sort-icon">↕</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($teamMembers as $volunteer): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($volunteer['first_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($volunteer['last_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($volunteer['admin_id']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
+ <?php include '../../partials/footer.php'?>
 </body>
+
+<script src="../../assets/js/timelynews.js"></script>
 </html>

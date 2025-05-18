@@ -9,9 +9,60 @@
 
 </head>
 <body>
+  <div id="overlay" id="overlay"></div>
+    <div id="sidebar" id="sidebar" onclick="stopPropagation()">
+        <div class="close">  
+            <button class="sidebar-close" onclick="toggleSidebar()">×</button>
+        </div>   
+        <div class="menu">
+        <nav id="nav-menu">
+            <ul>
+                 <ol><a href="main_dashboard.php">Dashboard</a></ol>
+                 <ol><a href="main_admin.php">Admin</a></ol>
+                 <ol><a href="teams.php">Teams</a></ol>
+                 <ol><a href="../../controllers/logout1.php">Logout</a></ol>
+            </ul>
+        </nav>
+        </div>
+        <button id="report-btn"  onclick="openModal('reportModal')">REPORT</button>
+    </div>
 
+    <!-- Header -->
+    <header id="top-header">
+       <div class="logos">
+        <a href="#" id="drrm-logo">
+            <img src="../../assets/images/Group 2829.png" alt="">
+        </a>
+        <a href="#" id="govph-logo">
+            <img src="../../assets/images/Frame 3 (1).svg" alt="">
+        </a>
+        </div>
+        <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <nav id="nav-menu">
+            <a href="main_dashboard.php">Dashboard</a>
+            <a href="main_admin.php">Admin</a>
+            <a href="teams.php">Teams</a>
+            <a href="../../controllers/logout1.php">Logout</a>
+        </nav>
+    </header>
+    
+    <div id="sub-header">
+        <div id="drrm-logor">
+            <img src="../../assets/images/Frame 1 (1).svg" alt="">
+        </div>
+        <div id="right-section">
+            <button id="report-btn" class="report-btn" onclick="openModal('reportModal')">REPORT</button>
+            <div id="time-box">
+                <div id="time-label">Philippine Standard Time</div>
+                <div id="ph-time" class="time"></div>
+                <div id="ph-date" class="date"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-contents">
 
-
+    
   <div class="form-container">
     <div class="form-header">
       <h2>Create Account</h2>
@@ -87,6 +138,8 @@
 </form>
 
   </div>
+  </div>
 <script src="../../assets/js/super_admin.js"></script>
+<script src="../../assets/js/timelynews.js"></script>
 </body>
 </html>

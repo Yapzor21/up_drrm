@@ -1,12 +1,3 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
 
 .form-container {
   background: white;
@@ -200,3 +191,293 @@ input[name="password"][data-strength="strong"] + .password-strength::before {
     margin: 0 15px;
   }
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+   
+}
+body{
+    background: #ffffff;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+
+#govph-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+#govph-logo img {
+    height: 55px;
+}
+
+
+
+#nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#nav-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+#nav-menu a.active {
+    border-bottom: 2px solid #333;
+}
+
+#search-box {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+#top-header {
+    background-color: #3c3486;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+#sub-header {
+    top: 50px; 
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+#drrm-logor {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    gap: 10px;
+}
+
+#drrm-logor img {
+    height: 100px;
+}
+
+#drrm-logo img {
+    display: none;
+}
+
+#right-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#report-btn.report-btn{
+
+   font-weight: medium;
+   border: solid 1px black;
+}
+
+#report-btn {
+    background-color: #ff0000;
+    color: white;
+    height: 70px;
+    width: 200px;
+    border: none;
+    border-radius: 2px solid;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#time-label {
+  color: #ff0000;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+#time-box {
+  border: 1px solid #ff0000;
+  padding: 8px;
+  text-align: center;
+  width: 200px;
+  height: 70px; /* 70px - 2*8px padding = 54px */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#time-box .time {
+  color: #ff0000;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+#time-box .date {
+  color: #ff0000;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+
+#menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #3c3486;
+    padding: 20px;
+    transition: 0.3s;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+#sidebar.active {
+    left: 0;
+}
+
+#sidebar-close {
+    color: white;
+    font-size: 24px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#sidebar .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 50px;
+}
+
+#sidebar .search-box {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#sidebar .report-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+#overlay.active {
+    display: block;
+}
+
+.close{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.close button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 25px;
+}
+
+.menu{
+    display: grid;
+    padding: 15px;
+    color: white;
+    line-height: 40px
+}
+
+#nav-menu a:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    #menu-toggle {
+        display: block;
+    }
+
+    #top-header{
+        padding: 10px 20px;
+    }
+
+    #drrm-logo img {
+        display: flex;
+        height: 50px;
+    }
+
+    #govph-logo img {
+        display: none;
+    }
+    
+    #nav-menu{
+        display: none;
+     }
+
+    #right-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #sub-header {
+       display: none;
+    }
+
+    #drrm-logo {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #sidebar #nav-menu, #sidebar #search-box, #sidebar #report-btn {
+        display: block;
+    }
+}
+
+.main-contents{
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+ 

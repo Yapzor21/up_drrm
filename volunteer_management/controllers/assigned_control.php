@@ -18,50 +18,42 @@ if (isset($_POST['assign_submit'])) {
     // Format the time_started as a datetime
     $timeStarted = date('Y-m-d') . ' ' . $timeStarted . ':00';
     
-    // Check which teams were selected
+    // Get all available teams
+    $allTeams = $team->getAllTeams();
     $selectedTeams = [];
     
-    if (isset($_POST['medical'])) {
-        $medicalTeam = $team->getTeamByName('medical');
-        if ($medicalTeam) {
-            $selectedTeams[] = $medicalTeam['id'];
+    // Check which teams were selected
+    foreach ($allTeams as $teamItem) {
+        $teamName = strtolower($teamItem['name']);
+        if (isset($_POST[$teamName])) {
+            $selectedTeams[] = $teamItem['id'];
         }
     }
     
-    if (isset($_POST['rescue'])) {
-        $rescueTeam = $team->getTeamByName('rescue');
-        if ($rescueTeam) {
-            $selectedTeams[] = $rescueTeam['id'];
-        }
-    }
+    // Check if this is an update operation
+    $isUpdate = isset($_POST['is_update']) || isset($_POST['update_team_id']) || 
+                strpos($_SERVER['HTTP_REFERER'], 'updateTeamModal') !== false;
     
-    if (isset($_POST['logistics'])) {
-        $logisticsTeam = $team->getTeamByName('logistics');
-        if ($logisticsTeam) {
-            $selectedTeams[] = $logisticsTeam['id'];
-        }
-    }
+    $success = false;
     
-    if (isset($_POST['fire'])) {
-        $fireTeam = $team->getTeamByName('fire');
-        if ($fireTeam) {
-            $selectedTeams[] = $fireTeam['id'];
-        }
-    }
-    
-    // Create assignments for each selected team
-    $success = true;
-    foreach ($selectedTeams as $teamId) {
-        // Check if this team is already assigned to this report
-        if (!$assignment->isTeamAssignedToReport($reportId, $teamId)) {
-            $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
-            if (!$result) {
-                $success = false;
+    if ($isUpdate) {
+        // Use the update method for updates - this will handle removing unchecked teams
+        $success = $assignment->updateAssignments($reportId, $selectedTeams, $timeStarted);
+    } else {
+        // For new assignments, create each one individually
+        $success = true;
+        foreach ($selectedTeams as $teamId) {
+            // Check if this team is already assigned to this report
+            if (!$assignment->isTeamAssignedToReport($reportId, $teamId)) {
+                $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
+                if (!$result) {
+                    $success = false;
+                }
             }
         }
     }
     
-    if ($success && !empty($selectedTeams)) {
+    if ($success) {
         // Redirect with success message AND report_id
         header("Location: ../views/admin/main_admin.php?success=assigned&report_id=" . $reportId);
         exit();

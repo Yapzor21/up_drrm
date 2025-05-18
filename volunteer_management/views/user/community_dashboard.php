@@ -35,7 +35,7 @@ $result = $controller->handleRequest();
             <ul>
                  <ol><a href="#">Dashboard</a></ol>
                  <ol><a href="community_report.php">Account</a></ol>
-                 <ol><a href="#">Admin</a></ol>
+                 <ol><a href="../../controllers/logout1.php">Logout</a></ol>
             </ul>
         </nav>
         </div>

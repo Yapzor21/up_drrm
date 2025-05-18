@@ -29,7 +29,7 @@ $message = $controller->getMessage();
             <ul>
                  <ol><a href="community_dashboard.php">Dashboard</a></ol>
                  <ol><a href="#">Account</a></ol>
-                 <ol><a href="#">About us</a></ol>
+                 <ol><a href="../../controllers/logout1.php">Logout</a></ol>
             </ul>
         </nav>
         </div>
@@ -85,12 +85,19 @@ $message = $controller->getMessage();
     </div>
     
   
-    <div id="content">
-        <div id="sub-content">
-            <h1 style="margin-bottom:10px;">Reports</h1>
+    <div class="main-contents">
+        
+            <!-- Reports Table -->
             <div class="table-container">
-                <table id="data-list">
-                    <tbody>
+                <div class="search-container">
+                    <div class="title-header"><h3>Reports</h3></div>
+                    <div class="const">
+                        <input type="text" id="searchInput" placeholder="Search reports..." autocomplete="off">
+                        <button id="searchButton">Search</button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
                         <tr>
                             <th>Report_Id</th>
                             <th>Disaster Type</th>
@@ -101,34 +108,32 @@ $message = $controller->getMessage();
                             <th>Contact Number</th>
                             <th>Date_Reported</th>
                         </tr>
-
+                    </thead>
+                    <tbody>
                         <?php
-                    if ($result && is_array($result) && count($result) > 0) {
-                        foreach($result as $row) { 
-                            echo "<tr class='clickable-row' data-id='" . $row["Report_Id"] . "'>";
-                            echo "<td>" . $row["Report_Id"] . "</td>";
-                            echo "<td>" . $row["Disaster_Type"] . "</td>";
-                            echo "<td>" . $row["Location"] . "</td>";
-                            echo "<td>" . $row["City"] . "</td>";
-                            echo "<td>" . $row["Description"] . "</td>";
-                            echo "<td>" . $row["Name_of_Reporter"] . "</td>";
-                            echo "<td>" . $row["Contact_Number"] . "</td>";
-                            echo "<td>" . $row["Date_Reported"] . "</td>";
-                            echo "</tr>";
+                        if ($result && is_array($result) && count($result) > 0) {
+                            foreach($result as $row) { 
+                                echo "<tr>";
+                                echo "<td>" . $row["Report_Id"] . "</td>";
+                                echo "<td>" . $row["Disaster_Type"] . "</td>";
+                                echo "<td>" . $row["Location"] . "</td>";
+                                echo "<td>" . $row["City"] . "</td>";
+                                echo "<td>" . $row["Description"] . "</td>";
+                                echo "<td>" . $row["Name_of_Reporter"] . "</td>";
+                                echo "<td>" . $row["Contact_Number"] . "</td>";
+                                echo "<td>" . $row["Date_Reported"] . "</td>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='9' style='text-align:center'>No reports found</td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='7' style='text-align:center'>No reports found</td></tr>";
-                    }
-                    ?>
+                        ?>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
-    
+            </div>
   <!--footer sheeshh-->
   
-  <?php
+    <?php
     include '../../partials/footer.php';
     ?>
   

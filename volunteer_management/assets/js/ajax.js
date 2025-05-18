@@ -87,39 +87,23 @@ function updatePersonnelStatus(id, status, personnelItem) {
           clonedItem.setAttribute("data-status", status)
 
           // Update the UI based on the new status
-          if (status === "deployed" || status === "standby") {
-            // Remove phone icon if it exists
-            const phoneIcon = clonedItem.querySelector(".phone-icon")
-            if (phoneIcon) {
-              phoneIcon.remove()
-            }
-
-            // Add status indicator if it doesn't exist
-            let statusIndicator = clonedItem.querySelector(".status-indicator")
-            if (!statusIndicator) {
-              statusIndicator = document.createElement("span")
-              statusIndicator.className = "status-indicator"
-              clonedItem.insertBefore(statusIndicator, clonedItem.firstChild)
-            }
-
-            // Update status indicator class
-            statusIndicator.className = "status-indicator " + status
-          } else if (status === "oncall") {
-            // Remove status indicator if it exists
-            const statusIndicator = clonedItem.querySelector(".status-indicator")
-            if (statusIndicator) {
-              statusIndicator.remove()
-            }
-
-            // Add phone icon if it doesn't exist
-            if (!clonedItem.querySelector(".phone-icon")) {
-              const nameSpan = clonedItem.querySelector("span:not(.status-indicator)")
-              const phoneIcon = document.createElement("span")
-              phoneIcon.className = "phone-icon"
-              phoneIcon.textContent = "📞"
-              clonedItem.insertBefore(phoneIcon, nameSpan.nextSibling)
-            }
+          // Remove phone icon if it exists (for any status)
+          const phoneIcon = clonedItem.querySelector(".phone-icon")
+          if (phoneIcon) {
+            phoneIcon.remove()
           }
+
+          // Add or update status indicator for all statuses
+          let statusIndicator = clonedItem.querySelector(".status-indicator")
+          if (!statusIndicator) {
+            statusIndicator = document.createElement("span")
+            statusIndicator.className = "status-indicator"
+            clonedItem.insertBefore(statusIndicator, clonedItem.firstChild)
+          }
+
+          // Update status indicator class based on status
+          // This will set the appropriate color: green for deployed, yellow for standby, red for oncall
+          statusIndicator.className = "status-indicator " + status
 
           // Add event listeners to the cloned item
           addEventListenersToPersonnelItem(clonedItem)
