@@ -2,37 +2,32 @@
 require_once '../../controllers/report_control.php';
 require_once '../../controllers/assigned_control.php';
 require_once '../../controllers/personnel_control.php';
-require_once '../../model/assigned.php';
-require_once '../../model/teams.php';
-require_once '../../config/database.php';
+require_once '../../controllers/teamassignment.php';
+require_once '../../controllers/volunteer_control.php';
 
 // Initialize controllers
 $personnelController = new PersonnelController();
 $reportController = new UserReportController(null);
-
+$teamAssignmentController = new TeamAssignmentController();
+$volunteerTeamsController = new VolunteerTeamsController();
 
 // Get all reports based on user actions
 $result = $reportController->handleRequest();
 
-// Initialize database connection
-$database = new Database();
-$db = $database->connect();
-
-// Initialize assignment object
-$assignment = new Assignment($db);
-// Initialize team model
-$teamModel = new Team($db);
-// Fetch all teams
-
-
+// Get report ID for assignment if available
 $reportIdForAssignment = isset($_GET['report_id']) ? $_GET['report_id'] : '';
 $showAssignModal = isset($_GET['assign']) && $_GET['assign'] == 'true';
 $reportId = isset($_GET['report_id']) ? $_GET['report_id'] : null;
-$assignmentDetails = $reportId ? $assignment->getAssignmentDetailsForReport($reportId) : [];
 
-// Get ALL assignments for ALL reports
-$allAssignments = $assignment->getAllAssignments();
-$teams = $teamModel->getAllTeams();
+// Get assignment details using the controller
+$assignmentDetails = $reportId ? $teamAssignmentController->getAssignmentDetailsForReport($reportId) : [];
+
+// Get ALL assignments for ALL reports using the controller
+$allAssignments = $teamAssignmentController->getAllAssignments();
+
+// Get all teams using the controller
+$teams = $teamAssignmentController->getAllTeams();
+
 // Get personnel by status using the controller
 $deployed = $personnelController->getPersonnelByStatus('deployed');
 $standby = $personnelController->getPersonnelByStatus('standby');

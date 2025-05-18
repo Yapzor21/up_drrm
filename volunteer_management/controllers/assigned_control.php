@@ -2,12 +2,10 @@
 require_once __DIR__ . '/../model/assigned.php';
 require_once __DIR__ . '/../model/teams.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/teamassignment.php';
 
-$database = new Database();
-$db = $database->connect();
-
-$assignment = new Assignment($db);
-$team = new Team($db);
+// Create an instance of the TeamAssignmentController
+$teamAssignmentController = new TeamAssignmentController();
 
 // Handle form submission
 if (isset($_POST['assign_submit'])) {
@@ -19,7 +17,7 @@ if (isset($_POST['assign_submit'])) {
     $timeStarted = date('Y-m-d') . ' ' . $timeStarted . ':00';
     
     // Get all available teams
-    $allTeams = $team->getAllTeams();
+    $allTeams = $teamAssignmentController->getAllTeams();
     $selectedTeams = [];
     
     // Check which teams were selected
@@ -38,14 +36,14 @@ if (isset($_POST['assign_submit'])) {
     
     if ($isUpdate) {
         // Use the update method for updates - this will handle removing unchecked teams
-        $success = $assignment->updateAssignments($reportId, $selectedTeams, $timeStarted);
+        $success = $teamAssignmentController->updateAssignments($reportId, $selectedTeams, $timeStarted);
     } else {
         // For new assignments, create each one individually
         $success = true;
         foreach ($selectedTeams as $teamId) {
             // Check if this team is already assigned to this report
-            if (!$assignment->isTeamAssignedToReport($reportId, $teamId)) {
-                $result = $assignment->createAssignment($reportId, $teamId, $timeStarted);
+            if (!$teamAssignmentController->isTeamAssignedToReport($reportId, $teamId)) {
+                $result = $teamAssignmentController->createAssignment($reportId, $teamId, $timeStarted);
                 if (!$result) {
                     $success = false;
                 }
