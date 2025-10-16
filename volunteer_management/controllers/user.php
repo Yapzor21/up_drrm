@@ -3,12 +3,36 @@ require_once __DIR__ . '/../model/user.php'; // Correct path for the model
 
 class UserController {
     private $userModel;
+    private $recaptchaSecret = '6LeCluwrAAAAAKphu_9REIAyDIDwgbw9DppQwd3a';
 
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         $this->userModel = new UserModel();
+    }
+
+    private function verifyRecaptcha($recaptchaResponse) {
+        $url = 'https://www.google.com/recaptcha/api/siteverify';
+        
+        $data = [
+            'secret' => $this->recaptchaSecret,
+            'response' => $recaptchaResponse
+        ];
+
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            ]
+        ];
+
+        $context = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+        $result = json_decode($response, true);
+
+        return isset($result['success']) && $result['success'] === true;
     }
 
     // Registration Method
@@ -43,6 +67,14 @@ class UserController {
                 header("Location: ../views/authentication/step3.php");
                 exit();
             } elseif ($step == "3") {
+                $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+                
+                if (empty($recaptchaResponse) || !$this->verifyRecaptcha($recaptchaResponse)) {
+                    $_SESSION['flash_error'] = "reCAPTCHA verification failed. Please try again.";
+                    header("Location: ../views/authentication/step3.php");
+                    exit();
+                }
+
                 // Handle Step 3 data
                 $_SESSION['gender'] = $_POST['gender'];
                 $_SESSION['phone'] = $_POST['phone_number'];

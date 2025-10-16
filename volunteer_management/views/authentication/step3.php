@@ -35,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Step 3</title>
     <link rel="stylesheet" href="../../assets/css/authentication/step3.css">
+    <!-- Added reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="wrapper">
@@ -101,6 +103,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="checkbox-group">
                     <input type="checkbox" id="terms" required>
                     <label for="terms">By creating an account, I agree to the Terms and Conditions and Privacy Policy of DRRM</label>
+                </div>
+
+                <!-- Added reCAPTCHA-->
+                <div class="form-group" style="margin: 20px 0;">
+                    <div class="g-recaptcha" data-sitekey="6LeCluwrAAAAAC53xNdrNzAmWnTdj3NWRXW9f12v"></div>
                 </div>
     
                 <div class="submit">
