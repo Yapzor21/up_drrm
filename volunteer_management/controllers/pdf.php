@@ -19,6 +19,32 @@ $stmt = $conn->prepare("SELECT * FROM user_report ORDER BY Date_Reported DESC");
 $stmt->execute();
 $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$stmt = $conn->prepare("
+   SELECT 
+    ur.report_id,
+    ur.disaster_type,
+    ur.location,
+    ur.city,
+    a.time_started,
+    a.date_assigned,
+    GROUP_CONCAT(t.name SEPARATOR ', ') AS team_name
+FROM user_report ur
+LEFT JOIN assignment a ON ur.report_id = a.report_id
+LEFT JOIN team t ON a.team_id = t.id
+GROUP BY 
+    ur.report_id,
+    ur.disaster_type,
+    ur.location,
+    ur.city,
+    a.time_started,
+    a.date_assigned
+ORDER BY ur.date_reported DESC
+
+");
+$stmt->execute();
+$s1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 
 class DisasterPDF extends FPDF {
  // Header
@@ -34,8 +60,11 @@ class DisasterPDF extends FPDF {
     $this->Line(10, 40, $this->w - 10, 40);
     $this->Ln(15);
 }
-function Footer() {
  
+
+function Footer() {
+  
+
     $this->SetY(-15);
     $this->SetFont('Helvetica', 'I', 8);
     $this->Cell(90, 10, 'Confidential - DRRM Internal Use Only', 0, 0, 'L');
@@ -63,6 +92,28 @@ function Footer() {
             $this->Ln();
         }
     }
+
+    function BuildTableAssignment($header, $data) {
+        
+        $this->SetFont('helvetica', 'B', 10);
+        foreach($header as $col) {
+            $this->Cell(40, 7, $col, 1);
+        }
+        $this->Ln();
+
+        // Data
+        $this->SetFont('helvetica', '', 9);
+        foreach($data as $row) {
+            $this->Cell(40, 6, $row['report_id'], 1);
+            $this->Cell(40, 6, $row['disaster_type'], 1);
+            $this->Cell(40, 6, $row['location'], 1);
+            $this->Cell(40, 6, $row['city'], 1);
+            $this->Cell(40, 6, $row['team_name'], 1);
+            $this->Cell(40, 6, $row['time_started'], 1);
+            $this->Cell(40, 6, $row['date_assigned'], 1);
+            $this->Ln();
+        }
+    }
 }
 
 // Generate PDF
@@ -74,7 +125,22 @@ $pdf->BuildTable(
     $reports
 );
 $pdf->SetTextColor(0, 102, 204);
-$pdf -> Cell(0, 10, ' * The above report lists all disaster incidents submitted by volunteers within the past week.', 0, 1, 'C');
+$pdf -> Cell(0, 10, ' * The report above lists all disaster incidents submitted by volunteers over the past week*', 0, 1, 'C');
 $pdf->SetTextColor(0, 0, 0);
+$pdf->Ln(10);
+
+
+$pdf -> Cell(28, 10, 'Assigned Team', 0, 1, 'C');
+$pdf->BuildTableAssignment(
+    ['Report Id', 'Disaster Type', 'Location', 'city', 'Assigned Team','Time Started', 'Date Assigned'],
+    $s1
+   
+);
+$pdf->SetTextColor(0, 102, 204);
+$pdf -> Cell(0, 10, ' *The report above list all the assigned team over the past week*', 0, 1, 'C');
+$pdf->SetTextColor(0, 0, 0);
+$pdf->Ln(10);
 $pdf->Output('I', 'Disaster_Report.pdf');
+
+
 ?>
