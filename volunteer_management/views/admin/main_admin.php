@@ -390,7 +390,7 @@ $oncall = $personnelController->getPersonnelByStatus('oncall');
 
             
                 <div class="print_report">
-                    <form method="POST" action="../../controllers/pdf.php">
+                    <form method="POST" action="../../controllers/PdfController.php">
                         <button class="print_report_bts" type="submit">Print Report</button>
                     </form>
                 </div>

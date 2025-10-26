@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($success) {
         session_unset();
         session_destroy();
-        header("Location: login.php");
+        header("Location: index.php");
         exit();
     } else {
         echo "Error in registration. Please try again.";
