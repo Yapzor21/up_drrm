@@ -52,4 +52,14 @@ ONGOING TASK 5/3/25 -ADRIAN
  -ara sa helio ang updated nga database
 >>>>>>> 567fd6bc25d8d338c73f35cd3a1a87a998930167
 
+
+
+
+-------------------------------------------------------------------------------------
+# REUSE WEBSITE (WITH API INTEGRATION ) 10/26/2025 
+SMS API - https://philsms.com/
+GOOGLE reCAPTCHA API - https://www.google.com/recaptcha/admin/site/736925314
+PDF GENERATOR API - (gab)
+
+
   
