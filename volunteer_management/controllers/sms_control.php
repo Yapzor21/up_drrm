@@ -1,66 +1,93 @@
 <?php
-// Load database connection
+
 require_once __DIR__ . '/../config/database.php'; 
 
 
+$database = new Database();
+$conn = $database->connect();
+
+// Check 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_alert'])) {
-    $disasterType = $_POST['disasterType'];
-    $location = $_POST['location'];
-    $description = $_POST['description'];
-    $message = "ALERT: $disasterType reported at $location. Details: $description. — DRRM Team";
-
-    $database = new Database();
-    $pdo = $database->connect(); 
-
-    // Fetch contact numbers from employee table
-    $stmt = $pdo->prepare("SELECT contact_num FROM employee WHERE contact_num IS NOT NULL");
+    
+    // Get form data
+    $disasterType = $_POST['disasterType'] ?? '';
+    $location = $_POST['location'] ?? '';
+    $description = $_POST['description'] ?? '';
+    
+    $query = "SELECT contact_num FROM employee WHERE status = 'standby' AND contact_num IS NOT NULL";
+    $stmt = $conn->prepare($query);
     $stmt->execute();
-    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $numbers = [];
-    foreach ($contacts as $row) {
-        $contact = preg_replace('/\D/', '', $row['contact_num']); // Clean contact number
-        if (!empty($contact)) {
-            if (str_starts_with($contact, '0')) {
-                $contact = '+63' . substr($contact, 1);
-            } elseif (!str_starts_with($contact, '+63')) {
-                $contact = '+63' . $contact;
+    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (count($employees) > 0) {
+        // PhilSMS API credentials
+        $sender_id = "PhilSMS";
+        $token = "3392|GZKHRdfziTh9KuMwqHqt3jNC9M5pSfLYndr4OzHk";
+        
+        // Prepare message
+        $message = "DISASTER ALERT: $disasterType\nLocation: $location\nDetails: $description";
+        
+        $successful_sends = 0;
+        $failed_sends = 0;
+        
+        foreach ($employees as $employee) {
+            $contact_num = $employee['contact_num'];
+            
+            if (substr($contact_num, 0, 1) === '0') {
+                $formatted_number = '+63' . substr($contact_num, 1);
+            } else {
+                $formatted_number = $contact_num;
             }
-            $numbers[] = $contact;
+            
+            
+            $send_data = [
+                'sender_id' => $sender_id,
+                'recipient' => $formatted_number,
+                'message' => $message
+            ];
+            
+            $parameters = json_encode($send_data);
+            
+            // Send SMS via PhilSMS API
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://app.philsms.com/api/v3/sms/send");
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            
+            $headers = [
+                "Content-Type: application/json",
+                "Authorization: Bearer $token"
+            ];
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            
+            $response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            
+            if ($http_code === 200 || $http_code === 201) {
+                $successful_sends++;
+            } else {
+                $failed_sends++;
+            }
         }
+        
+        // Return success response
+        $_SESSION['alert_message'] = "Alert sent successfully to $successful_sends standby employees.";
+        if ($failed_sends > 0) {
+            $_SESSION['alert_message'] .= " ($failed_sends failed)";
+        }
+        $_SESSION['alert_type'] = 'success';
+        
+    } else {
+        $_SESSION['alert_message'] = "No standby employees found to alert.";
+        $_SESSION['alert_type'] = 'warning';
     }
+    
 
-    if (empty($numbers)) {
-        die("No valid recipients found.");
-    }
-
-    $recipientNumbers = implode(',', $numbers);
-    $send_data = [
-        'sender_id' => 'PhilSMS',
-        'recipient' => $recipientNumbers,
-        'message' => $message
-    ];
-
-    $token = "1781|MT7curmrYM5STczJ8Y3ISFcbrXKR0JVwl6ka0ICm";
-    $parameters = json_encode($send_data);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://app.philsms.com/api/v3/sms/send");
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Content-Type: application/json",
-        "Authorization: Bearer $token"
-    ]);
-
-    $response = curl_exec($ch);
-    if (curl_errno($ch)) {
-        die("SMS sending failed: " . curl_error($ch));
-    }
-    curl_close($ch);
-
-    echo "<script>alert('Alert successfully sent!'); 
+    echo "<script>alert('Alert successfully sent to " . " standby employees!'); 
     window.location.href='../views/admin/main_admin.php';</script>";
     exit;
 }
